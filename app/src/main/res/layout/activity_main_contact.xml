@@ -37,11 +37,15 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="128dp"
+        android:layout_height="71dp"
         android:layout_margin="@dimen/fab_margin"
+        app:backgroundTint="@android:color/black"
+        app:elevation="0dp"
         app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|end"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        app:layout_anchorGravity="center|end"
+        app:srcCompat="@mipmap/add_contact_button"
+        tools:layout_editor_absoluteX="240dp"
+        tools:layout_editor_absoluteY="129dp" />
 
 </android.support.design.widget.CoordinatorLayout>
