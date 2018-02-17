@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,10 +57,14 @@ public class MainContactActivity extends AppCompatActivity {
     }
 
 
-    public void launchDetailContactActivity(View v){
-        Intent myIntent = new Intent(MainContactActivity.this,
+    public void launchDetailContactActivity(View view){
+        Intent myIntent = new Intent(this,
                 DetailContact.class);
         startActivity(myIntent);
+    }
+
+    public void testClick(View view){
+        Log.v("myTag","FAB Clicked");
     }
 
 

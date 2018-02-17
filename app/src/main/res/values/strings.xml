@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Contacts</string>
     <string name="action_settings">Settings</string>
+    <string name="birthdate">Birthdate</string>
+    <string name="saveButton">Save</string>
+    <string name="deleteButton">Delete</string>
+    <string name="firstContactDate">Date of First Contact</string>
 
 </resources>

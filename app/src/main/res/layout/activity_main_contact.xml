@@ -7,12 +7,24 @@
     android:fitsSystemWindows="true"
     tools:context="com.fafaffy.contacts.MainContactActivity">
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addContactButton"
+        android:layout_width="131dp"
+        android:layout_height="74dp"
+        android:layout_margin="25dp"
+        android:clickable="true"
+        android:onClick="launchDetailContactActivity"
+        app:layout_anchor="@+id/mainPageListView"
+        app:layout_anchorGravity="right|bottom"
+        app:srcCompat="@mipmap/add_contact_button" />
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/app_bar_height"
+        android:layout_height="155dp"
         android:fitsSystemWindows="true"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        tools:layout_editor_absoluteY="25dp">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/toolbar_layout"
@@ -32,20 +44,6 @@
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/addContactButton"
-        android:layout_width="128dp"
-        android:layout_height="71dp"
-        android:layout_margin="@dimen/fab_margin"
-        android:onClick="launchDetailContactActivity"
-        app:backgroundTint="@android:color/black"
-        app:elevation="0dp"
-        app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="center|end"
-        app:srcCompat="@mipmap/add_contact_button"
-        tools:layout_editor_absoluteX="240dp"
-        tools:layout_editor_absoluteY="129dp" />
 
     <ListView
         android:id="@+id/mainPageListView"
