@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient"
     tools:context="com.fafaffy.contacts.DetailContact">
 
     <DatePicker
@@ -87,7 +88,7 @@
         android:layout_marginTop="24dp"
         android:gravity="center_vertical|center_horizontal"
         android:text="@string/birthdate"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@android:color/background_dark"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/phoneNumberTextBox" />
@@ -120,7 +121,7 @@
         android:layout_marginTop="8dp"
         android:gravity="center_vertical|center_horizontal"
         android:text="@string/firstContactDate"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@android:color/background_dark"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/birthdate" />

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient"
     android:fitsSystemWindows="true"
     tools:context="com.fafaffy.contacts.MainContactActivity">
 
@@ -14,6 +15,7 @@
         android:layout_margin="25dp"
         android:clickable="true"
         android:onClick="launchDetailContactActivity"
+        app:backgroundTint="@color/colorPrimary"
         app:layout_anchor="@+id/mainPageListView"
         app:layout_anchorGravity="right|bottom"
         app:srcCompat="@mipmap/add_contact_button" />
@@ -31,7 +33,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            app:contentScrim="?attr/colorPrimary"
+            app:contentScrim="@color/colorPrimaryDark"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:toolbarId="@+id/toolbar">
 
