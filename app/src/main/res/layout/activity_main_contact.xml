@@ -40,9 +40,9 @@
         android:layout_margin="@dimen/fab_margin"
         android:onClick="launchDetailContactActivity"
         android:src="@mipmap/add_contact_button"
+        app:backgroundTint="#3061A9"
         app:layout_anchor="@+id/mainPageRecyclerView"
-        app:layout_anchorGravity="bottom|center|right"
-        app:srcCompat="@android:drawable/ic_input_add" />
+        app:layout_anchorGravity="bottom|center|right" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/mainPageRecyclerView"
