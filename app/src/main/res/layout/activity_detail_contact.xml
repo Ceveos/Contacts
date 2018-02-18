@@ -4,18 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient"
     tools:context="com.fafaffy.contacts.DetailContact">
 
-    <DatePicker
+    <Button
         android:id="@+id/birthdate"
-        android:layout_width="231dp"
+        android:layout_width="wrap_content"
         android:layout_height="68dp"
         android:layout_marginEnd="15dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:calendarViewShown="false"
-        android:datePickerMode="spinner"
+        android:onClick="showDatePickerDialog"
+        android:text="N/A"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/birthdateTextView"
         app:layout_constraintTop_toBottomOf="@+id/phoneNumberTextBox" />
@@ -31,7 +31,7 @@
         android:fontFamily="monospace"
         android:gravity="center_horizontal"
         android:inputType="textPersonName"
-        android:text="Last Name"
+        android:hint="Last Name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/firstNameTextBox" />
@@ -47,7 +47,7 @@
         android:fontFamily="monospace"
         android:gravity="center_horizontal"
         android:inputType="textPersonName"
-        android:text="Middle Initial"
+        android:hint="Middle Initial"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lastNameTextBox" />
@@ -62,8 +62,8 @@
         android:ems="10"
         android:fontFamily="monospace"
         android:gravity="center_horizontal"
+        android:hint="First Name"
         android:inputType="textPersonName"
-        android:text="First Name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -79,7 +79,7 @@
         android:fontFamily="monospace"
         android:gravity="center_horizontal"
         android:inputType="phone"
-        android:text="Phone Number"
+        android:hint="Phone Number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/middleInitialTextBox" />
@@ -92,7 +92,7 @@
         android:layout_marginTop="24dp"
         android:fontFamily="monospace"
         android:gravity="center_vertical|center_horizontal"
-        android:text="@string/birthdate"
+        android:hint="@string/birthdate"
         android:textColor="@android:color/background_dark"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -105,7 +105,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginStart="32dp"
         android:backgroundTint="@android:color/background_dark"
-        android:text="@string/deleteButton"
+        android:hint="@string/deleteButton"
         android:textColor="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -117,7 +117,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="32dp"
         android:backgroundTint="@android:color/background_dark"
-        android:text="@string/saveButton"
+        android:hint="@string/saveButton"
         android:textColor="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -130,14 +130,14 @@
         android:layout_marginTop="8dp"
         android:fontFamily="monospace"
         android:gravity="center_vertical|center_horizontal"
-        android:text="@string/firstContactDate"
+        android:hint="@string/firstContactDate"
         android:textColor="@android:color/background_dark"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/birthdate" />
 
-    <EditText
-        android:id="@+id/firstContactDateTextBox"
+    <Button
+        android:id="@+id/firstContactDateButton"
         android:layout_width="wrap_content"
         android:layout_height="47dp"
         android:layout_marginEnd="28dp"
@@ -145,7 +145,8 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:fontFamily="monospace"
-        android:inputType="date"
+        android:text="N/A"
+        android:onClick="showDatePickerDialog"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/firstContactDateTextView"
         app:layout_constraintTop_toBottomOf="@+id/birthdate" />

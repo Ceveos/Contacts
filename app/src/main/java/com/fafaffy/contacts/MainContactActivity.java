@@ -8,6 +8,10 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -15,13 +19,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 
+import com.fafaffy.contacts.Adapters.ContactRecyclerAdapter;
+import com.fafaffy.contacts.Models.Contact;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainContactActivity extends AppCompatActivity {
 
 
     // ADD CONTACT LIST BELOW AFTER CONTACT MODEL HAS BEEN CREATED
     // public List<ContactClassGoesHere> contactData;
 
-    private FloatingActionButton addContactButton;
+    private FloatingActionButton fab;
+    private RecyclerView recyclerView;
+    private List<Contact> mData;
+    ContactRecyclerAdapter recyclerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +43,33 @@ public class MainContactActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.addContactButton);
+        fab = (FloatingActionButton) findViewById(R.id.addContactButton);
+        recyclerView = (RecyclerView) findViewById(R.id.mainPageRecyclerView);
 
+        // Create an empty array list in order to define our recycler view adapter
+        mData = new ArrayList<>();
+        recyclerAdapter = new ContactRecyclerAdapter(mData);
+
+
+        // Set the properties of the recyclerview (the layout, and animations)
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+
+        // Logic on when to hide or show the FAB button
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+                if (dy > 0 && fab.isShown())
+                    fab.hide();
+                if (dy < 0 && !fab.isShown())
+                    fab.show();
+            }
+        });
+
+        // Set our listview's adapter
+        recyclerView.setAdapter(recyclerAdapter);
 
     }
 
