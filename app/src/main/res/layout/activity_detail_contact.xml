@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient"
     tools:context="com.fafaffy.contacts.DetailContact">
 
     <Button
@@ -23,15 +24,15 @@
     <EditText
         android:id="@+id/lastNameTextBox"
         android:layout_width="wrap_content"
-        android:layout_height="38dp"
+        android:layout_height="46dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
         android:fontFamily="monospace"
         android:gravity="center_horizontal"
-        android:inputType="textPersonName"
         android:hint="Last Name"
+        android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/firstNameTextBox" />
@@ -39,15 +40,15 @@
     <EditText
         android:id="@+id/middleInitialTextBox"
         android:layout_width="wrap_content"
-        android:layout_height="41dp"
+        android:layout_height="46dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
         android:fontFamily="monospace"
         android:gravity="center_horizontal"
-        android:inputType="textPersonName"
         android:hint="Middle Initial"
+        android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lastNameTextBox" />
@@ -55,10 +56,10 @@
     <EditText
         android:id="@+id/firstNameTextBox"
         android:layout_width="wrap_content"
-        android:layout_height="39dp"
+        android:layout_height="46dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
         android:fontFamily="monospace"
         android:gravity="center_horizontal"
@@ -71,15 +72,15 @@
     <EditText
         android:id="@+id/phoneNumberTextBox"
         android:layout_width="wrap_content"
-        android:layout_height="42dp"
+        android:layout_height="46dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:ems="10"
         android:fontFamily="monospace"
         android:gravity="center_horizontal"
-        android:inputType="phone"
         android:hint="Phone Number"
+        android:inputType="phone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/middleInitialTextBox" />
@@ -106,6 +107,7 @@
         android:layout_marginStart="32dp"
         android:backgroundTint="@android:color/background_dark"
         android:hint="@string/deleteButton"
+        android:text="@string/deleteButton"
         android:textColor="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -118,6 +120,7 @@
         android:layout_marginEnd="32dp"
         android:backgroundTint="@android:color/background_dark"
         android:hint="@string/saveButton"
+        android:text="@string/saveButton"
         android:textColor="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -145,8 +148,8 @@
         android:layout_marginTop="8dp"
         android:ems="10"
         android:fontFamily="monospace"
-        android:text="N/A"
         android:onClick="showDatePickerDialog"
+        android:text="N/A"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/firstContactDateTextView"
         app:layout_constraintTop_toBottomOf="@+id/birthdate" />

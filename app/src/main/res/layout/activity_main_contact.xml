@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@drawable/gradient"
     android:fitsSystemWindows="true"
     tools:context="com.fafaffy.contacts.MainContactActivity">
 
@@ -19,7 +20,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:fitsSystemWindows="true"
-            app:contentScrim="?colorPrimary"
+            app:contentScrim="@color/colorPrimaryDark"
             app:layout_scrollFlags="exitUntilCollapsed|scroll">
 
             <android.support.v7.widget.Toolbar
@@ -34,11 +35,11 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/addContactButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
         android:layout_margin="@dimen/fab_margin"
-        android:tint="#ffffffff"
         android:onClick="launchDetailContactActivity"
+        android:src="@mipmap/add_contact_button"
         app:layout_anchor="@+id/mainPageRecyclerView"
         app:layout_anchorGravity="bottom|center|right"
         app:srcCompat="@android:drawable/ic_input_add" />
