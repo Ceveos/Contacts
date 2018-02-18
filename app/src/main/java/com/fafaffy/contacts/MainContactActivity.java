@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 
 import com.fafaffy.contacts.Adapters.ContactRecyclerAdapter;
 import com.fafaffy.contacts.Models.Contact;
@@ -28,8 +29,8 @@ import java.util.List;
 public class MainContactActivity extends AppCompatActivity {
 
 
-    // ADD CONTACT LIST BELOW AFTER CONTACT MODEL HAS BEEN CREATED
-    // public List<ContactClassGoesHere> contactData;
+
+
 
     private FloatingActionButton fab;
     private RecyclerView recyclerView;
@@ -42,6 +43,13 @@ public class MainContactActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_contact);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+
+
+
+
+
 
         fab = (FloatingActionButton) findViewById(R.id.addContactButton);
         recyclerView = (RecyclerView) findViewById(R.id.mainPageRecyclerView);
