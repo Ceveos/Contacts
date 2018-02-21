@@ -2,7 +2,6 @@ package com.fafaffy.contacts;
 
 /* Created by Alex Casasola & Brian Gardner */
 
-
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -35,14 +34,12 @@ public class DetailContact extends AppCompatActivity {
     private Button birthdateButton;
     private Button firstMetButton;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_detail_contact);
-
 
         // Assign vars to form fields
         firstNameEditText       = (EditText)findViewById(R.id.firstNameTextBox);
@@ -51,16 +48,14 @@ public class DetailContact extends AppCompatActivity {
         phoneNumberEditText     = (EditText)findViewById(R.id.phoneNumberTextBox);
         birthdateButton         = (Button)findViewById(R.id.birthdate);
         firstMetButton          = (Button)findViewById(R.id.firstContactDateButton);
-
-
     }
+
     public void showDatePickerDialog(View v) {
         DatePickerFragment newFragment = new DatePickerFragment();
         newFragment.setButton((Button)v);
         newFragment.show(getFragmentManager(), "date picker");
         //((Button)v).setText(newFragment.getSelectedDate().toString());
     }
-
 
 
     // Save function creates a contact from field data
@@ -99,15 +94,15 @@ public class DetailContact extends AppCompatActivity {
                 middleInitialEditText.getText().toString().charAt(0), //Convert string to char
                 lastNameEditText.getText().toString(),
                 phoneNumberEditText.getText().toString(),
-                convertDate(birthdateButton.getText()),     // Convert CharSequence to Date Obj
-                convertDate(firstMetButton.getText())       // Convert CharSequence to Date Obj
+                convertToDateObject(birthdateButton.getText()),     // Convert CharSequence to Date Obj
+                convertToDateObject(firstMetButton.getText())       // Convert CharSequence to Date Obj
         );
     }
 
 
     // Helper method from createContact method -- birtdate & firstmet date need to be converted
     // from CharSequence to Date objects to match Contact model
-    private Date convertDate(CharSequence input) {
+    private Date convertToDateObject(CharSequence input) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = null;
         try {
@@ -119,6 +114,12 @@ public class DetailContact extends AppCompatActivity {
         return date;
     }
 
+    // Helper method for print writer to convert Date obj to a writeable string
+//    private String convertDatePickerToString(Date inputDate){
+//        int day = inputDate.getDay();
+//        int month = inputDate.getMonth() + 1;
+//        int year = inputDate.getYear();
+//    }
 
 
 
