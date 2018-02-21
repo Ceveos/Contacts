@@ -63,25 +63,26 @@ public class DetailContact extends AppCompatActivity {
 
 
 
-
-
-
-    // Working Save Function  --------------------------------------------------------------------------------------------------------
+    // Save function creates a contact from field data
+    // and then writes the file to contactList.txt on internal private storage
         public void onSaveClicked(View v) {
-
             // Create a new contact from form data
             Contact contact = createContact();
 
+            // Write to file using comma delimited structure for each field
             try {
             FileOutputStream fileout=openFileOutput("contactList.txt", MODE_PRIVATE);
             OutputStreamWriter outputWriter=new OutputStreamWriter(fileout);
-            outputWriter.write(contact.getFirstName());
-//            outputWriter.write(contact.getMiddleInitial());
-//            outputWriter.write(contact.getLastName());
+            outputWriter.write(contact.getFirstName() + ",");
+            outputWriter.write(contact.getMiddleInitial() + ",");
+            outputWriter.write(contact.getLastName() + ",");
+            outputWriter.write(contact.getPhoneNumber() + ",");
+//            outputWriter.write(contact.getBirthday());
+//            outputWriter.write(contact.getFirstMet());
             outputWriter.close();
 
-            //display file saved message
-            Toast.makeText(getBaseContext(), contact.getFirstName() + contact.getLastName() + " saved successfully!",
+            //display file saved confirmation message
+            Toast.makeText(getBaseContext(), contact.getFirstName() + " " + contact.getLastName() + " saved successfully",
                     Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
@@ -91,9 +92,9 @@ public class DetailContact extends AppCompatActivity {
 
     // Method creates a contact from form input
     // Middle initial is converted from string to char
-    // Birthdate & firstMet date are both converted from CharSequence to Date objects
-    public  Contact createContact()  {
-        Contact contact = new Contact(
+    // Birth date & firstMet date are both converted from CharSequence to Date objects
+    public Contact createContact()  {
+        return new Contact(
                 firstNameEditText.getText().toString(),
                 middleInitialEditText.getText().toString().charAt(0), //Convert string to char
                 lastNameEditText.getText().toString(),
@@ -101,8 +102,6 @@ public class DetailContact extends AppCompatActivity {
                 convertDate(birthdateButton.getText()),     // Convert CharSequence to Date Obj
                 convertDate(firstMetButton.getText())       // Convert CharSequence to Date Obj
         );
-
-        return contact;
     }
 
 
@@ -110,7 +109,6 @@ public class DetailContact extends AppCompatActivity {
     // from CharSequence to Date objects to match Contact model
     private Date convertDate(CharSequence input) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-
         Date date = null;
         try {
             String dateString = sdf.format(input);
@@ -123,18 +121,6 @@ public class DetailContact extends AppCompatActivity {
 
 
 
-
-//    private Date convertDate(CharSequence input) {
-//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//        String dateString = sdf.format(input);
-//        Date date = null;
-//        try {
-//            date = sdf.parse(dateString);
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//        return date;
-//    }
 
 
     // Below Function was set up to call the FileController class, but that idea doesnt work
