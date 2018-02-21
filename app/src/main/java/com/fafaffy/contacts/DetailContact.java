@@ -63,18 +63,30 @@ public class DetailContact extends AppCompatActivity {
 
     // Save function creates a contact from field data
     // and then writes the file to contactList.txt on internal private storage
-        public void onSaveClicked(View v) {
+    public void onSaveClicked(View v) {
+        //Ensure user has filled out all fields before attempting
+        //to create a contact object and saving it
+        if(firstNameEditText.getText().toString().equals("") ||
+                lastNameEditText.getText().toString().equals("") ||
+                middleInitialEditText.getText().toString().equals("") ||
+                phoneNumberEditText.getText().toString().equals("")){
+                Toast.makeText(this, "Please fill out all form data before saving.",
+                    Toast.LENGTH_SHORT).show();
+        }
+        else {
             // Create a new contact from form data
             Contact contact = createContact();
             FileController fw = new FileController(getApplicationContext());
             fw.saveContact(contact);
 
-//          display file saved confirmation message
+            //display file saved confirmation message
             Toast.makeText(this, contact.getFirstName() + " " + contact.getLastName() + " saved successfully",
                     Toast.LENGTH_SHORT).show();
-        // Navigate user back to main page where all contacts are displayed
+
+            // Navigate user back to main page where all contacts are displayed
             Intent intent = new Intent(this, MainContactActivity.class);
             startActivity(intent);
+        }
     }
 
     // Method creates a contact from form input
@@ -90,7 +102,6 @@ public class DetailContact extends AppCompatActivity {
                 convertToDateObject(firstMetButton.getText())       // Convert CharSequence to Date Obj
         );
     }
-
 
     // Helper method from createContact method -- birtdate & firstmet date need to be converted
     // from CharSequence to Date objects to match Contact model
@@ -112,20 +123,4 @@ public class DetailContact extends AppCompatActivity {
 //        int month = inputDate.getMonth() + 1;
 //        int year = inputDate.getYear();
 //    }
-
-
-
-
-    // Below Function was set up to call the FileController class, but that idea doesnt work
-    // Instead Im putting the code directly in the DetailContact for now, To be moved later
-//    public void onSaveClicked(View v){
-//        //get the text from firstname
-//        //pass it into fileController.saveContact(firstname)
-//        Log.v("DetailContact: ", "onSaveClicked Function Reached" );
-//        FileController fc = new FileController(this);
-//        fc.saveContact(v, firstName);
-//
-//    }
-
-
 }
