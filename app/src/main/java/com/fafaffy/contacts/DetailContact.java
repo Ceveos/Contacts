@@ -11,6 +11,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.fafaffy.contacts.Controllers.FileController;
 import com.fafaffy.contacts.Fragments.DatePickerFragment;
 import com.fafaffy.contacts.Models.Contact;
 
@@ -64,27 +66,12 @@ public class DetailContact extends AppCompatActivity {
         public void onSaveClicked(View v) {
             // Create a new contact from form data
             Contact contact = createContact();
+            FileController fw = new FileController(getApplicationContext());
+            fw.saveContact(contact);
 
-            // Write to file using comma delimited structure for each field
-            try {
-            FileOutputStream fileout=openFileOutput("contactList.txt", MODE_PRIVATE);
-            OutputStreamWriter outputWriter=new OutputStreamWriter(fileout);
-            outputWriter.write(contact.getFirstName() + ",");
-            outputWriter.write(contact.getMiddleInitial() + ",");
-            outputWriter.write(contact.getLastName() + ",");
-            outputWriter.write(contact.getPhoneNumber() + ",");
-//            outputWriter.write(contact.getBirthday());
-//            outputWriter.write(contact.getFirstMet());
-            outputWriter.close();
-
-            //display file saved confirmation message
-            Toast.makeText(getBaseContext(), contact.getFirstName() + " " + contact.getLastName() + " saved successfully",
+//          display file saved confirmation message
+            Toast.makeText(this, contact.getFirstName() + " " + contact.getLastName() + " saved successfully",
                     Toast.LENGTH_SHORT).show();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         // Navigate user back to main page where all contacts are displayed
             Intent intent = new Intent(this, MainContactActivity.class);
             startActivity(intent);
