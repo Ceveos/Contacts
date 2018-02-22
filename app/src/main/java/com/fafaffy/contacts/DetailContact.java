@@ -78,7 +78,6 @@ public class DetailContact extends AppCompatActivity {
             Contact contact = createContact();
             FileController fw = new FileController(getApplicationContext());
             fw.saveContact(contact);
-
             //display file saved confirmation message
             Toast.makeText(this, contact.getFirstName() + " " + contact.getLastName() + " saved successfully",
                     Toast.LENGTH_SHORT).show();
@@ -106,11 +105,10 @@ public class DetailContact extends AppCompatActivity {
     // Helper method from createContact method -- birtdate & firstmet date need to be converted
     // from CharSequence to Date objects to match Contact model
     private Date convertToDateObject(CharSequence input) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
         Date date = null;
         try {
-            String dateString = sdf.format(input);
-            date = sdf.parse(dateString);
+            date = sdf.parse(input.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

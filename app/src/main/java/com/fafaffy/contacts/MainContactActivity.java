@@ -21,6 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
 import com.fafaffy.contacts.Adapters.ContactRecyclerAdapter;
+import com.fafaffy.contacts.Controllers.FileController;
 import com.fafaffy.contacts.Models.Contact;
 
 import java.util.ArrayList;
@@ -45,17 +46,14 @@ public class MainContactActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
 
-
-
-
-
-
-
         fab = (FloatingActionButton) findViewById(R.id.addContactButton);
         recyclerView = (RecyclerView) findViewById(R.id.mainPageRecyclerView);
 
         // Create an empty array list in order to define our recycler view adapter
         mData = new ArrayList<>();
+
+        FileController fw = new FileController(getApplicationContext());
+        mData = fw.readContacts();
         recyclerAdapter = new ContactRecyclerAdapter(mData);
 
 
@@ -78,7 +76,6 @@ public class MainContactActivity extends AppCompatActivity {
 
         // Set our listview's adapter
         recyclerView.setAdapter(recyclerAdapter);
-
     }
 
     @Override
@@ -107,10 +104,6 @@ public class MainContactActivity extends AppCompatActivity {
         Intent myIntent = new Intent(this,
                 DetailContact.class);
         startActivity(myIntent);
-    }
-
-    public void testClick(View view){
-        Log.v("myTag","FAB Clicked");
     }
 
 
