@@ -103,26 +103,28 @@ public class FileController extends Activity {
             BufferedReader reader = new BufferedReader(streamReader);
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
             while (reader.ready()) {
-                String[] line = reader.readLine().split(",");
-                Date birthdate = null;
-                if (!line[4].isEmpty() && !line[4].equalsIgnoreCase("N/A")) {
-                    birthdate = dateFormat.parse(line[4]);
+                try{
+                    String[] line = reader.readLine().split(",");
+                    Date birthdate = null;
+                    if (!line[4].isEmpty() && !line[4].equalsIgnoreCase("N/A")) {
+                        birthdate = dateFormat.parse(line[4]);
+                    }
+                    listOfContacts.add(new Contact(
+                            line[0],                      // First name
+                            line[1].charAt(0),            // Middle initial
+                            line[2],                      // Last name
+                            line[3],                      // Phone number
+                            birthdate,    // Birthday
+                            dateFormat.parse(line[5])) ); // First met
                 }
-                listOfContacts.add(new Contact(
-                        line[0],                      // First name
-                        line[1].charAt(0),            // Middle initial
-                        line[2],                      // Last name
-                        line[3],                      // Phone number
-                        birthdate,    // Birthday
-                        dateFormat.parse(line[5])) ); // First met
+                catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
         catch (IOException e) {
-            e.printStackTrace();
-        }
-        catch (ParseException e) {
             e.printStackTrace();
         }
         return listOfContacts;

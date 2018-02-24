@@ -38,6 +38,7 @@ public class MainContactActivity extends AppCompatActivity {
     private ArrayList<Contact> mData;
     ContactRecyclerAdapter recyclerAdapter;
 
+    // Initializes the recycler view and overall main activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,12 +101,14 @@ public class MainContactActivity extends AppCompatActivity {
     }
 
 
+    // Launch the create contact activity
     public void launchDetailContactActivity(View view){
         Intent addContact = new Intent(this,
                 DetailContact.class);
         startActivityForResult(addContact, 1);
     }
 
+    // When the user creates/deletes or edits an activity, refresh the contacts list
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         FileController fw = new FileController(getApplicationContext());

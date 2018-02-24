@@ -89,6 +89,8 @@ public class DetailContact extends AppCompatActivity {
         }
     }
 
+    // Opens a fragment to choose birthdate or when you first met
+    // By Alex
     public void showDatePickerDialog(View v) {
         DatePickerFragment newFragment = new DatePickerFragment();
         newFragment.setButton((Button)v);
@@ -174,10 +176,4 @@ public class DetailContact extends AppCompatActivity {
         return date;
     }
 
-    // Helper method for print writer to convert Date obj to a writeable string
-//    private String convertDatePickerToString(Date inputDate){
-//        int day = inputDate.getDay();
-//        int month = inputDate.getMonth() + 1;
-//        int year = inputDate.getYear();
-//    }
 }
