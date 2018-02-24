@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -46,7 +47,12 @@ public class FileController extends Activity {
             outputWriter.write(contact.getMiddleInitial() + ",");
             outputWriter.write(contact.getLastName() + ",");
             outputWriter.write(contact.getPhoneNumber() + ",");
-            outputWriter.write(dateFormat.format(contact.getBirthday()) + ",");
+            if (contact.getBirthday() == null) {
+
+                outputWriter.write("N/A,");
+            } else {
+                outputWriter.write(dateFormat.format(contact.getBirthday()) + ",");
+            }
             outputWriter.write(dateFormat.format(contact.getFirstMet()) + "\n");
 
             outputWriter.close();
@@ -70,7 +76,13 @@ public class FileController extends Activity {
                 outputWriter.write(contact.getMiddleInitial() + ",");
                 outputWriter.write(contact.getLastName() + ",");
                 outputWriter.write(contact.getPhoneNumber() + ",");
-                outputWriter.write(dateFormat.format(contact.getBirthday()) + ",");
+
+                if (contact.getBirthday() == null) {
+                    outputWriter.write(dateFormat.format("N/A") + ",");
+                } else {
+                    outputWriter.write(dateFormat.format(contact.getBirthday()) + ",");
+                }
+
                 outputWriter.write(dateFormat.format(contact.getFirstMet()) + "\n");
             }
 
@@ -83,8 +95,8 @@ public class FileController extends Activity {
 
     // Created by Alex
     // Reads all the contacts
-    public List<Contact> readContacts(){
-        List<Contact> listOfContacts = new LinkedList<Contact>();
+    public ArrayList<Contact> readContacts(){
+        ArrayList<Contact> listOfContacts = new ArrayList<>();
         try {
             FileInputStream filein = context.openFileInput("contacts.txt");
             InputStreamReader streamReader = new InputStreamReader(filein);
@@ -92,12 +104,16 @@ public class FileController extends Activity {
             SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
             while (reader.ready()) {
                 String[] line = reader.readLine().split(",");
+                Date birthdate = null;
+                if (!line[4].isEmpty() && !line[4].equalsIgnoreCase("N/A")) {
+                    birthdate = dateFormat.parse(line[4]);
+                }
                 listOfContacts.add(new Contact(
                         line[0],                      // First name
                         line[1].charAt(0),            // Middle initial
                         line[2],                      // Last name
                         line[3],                      // Phone number
-                        dateFormat.parse(line[4]),    // Birthday
+                        birthdate,    // Birthday
                         dateFormat.parse(line[5])) ); // First met
             }
         } catch (FileNotFoundException e) {

@@ -111,6 +111,7 @@
         android:backgroundTint="@android:color/background_dark"
         android:hint="@string/deleteButton"
         android:text="@string/deleteButton"
+        android:onClick="onDeleteClicked"
         android:textColor="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

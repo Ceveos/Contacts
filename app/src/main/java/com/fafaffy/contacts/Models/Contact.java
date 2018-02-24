@@ -1,12 +1,13 @@
 package com.fafaffy.contacts.Models;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by alex on 2/16/18.
  */
 
-public class Contact {
+public class Contact implements Serializable {
 
     // Empty constructor
     public Contact() {
@@ -14,12 +15,15 @@ public class Contact {
     }
 
     // Full constructor
-    public Contact (String firstName, Character middleInitial, String lastName, String phoneNumber, Date birthday, Date firstMet) {
+    public Contact (String firstName, Character middleInitial, String lastName, String phoneNumber, Object birthday, Date firstMet) {
         this.firstName = firstName;
         this.middleInitial = middleInitial;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
-        this.birthday = birthday;
+        if (birthday != null) {
+
+            this.birthday = (Date)birthday;
+        }
         this.firstMet = firstMet;
     }
 

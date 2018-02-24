@@ -35,7 +35,7 @@ public class MainContactActivity extends AppCompatActivity {
 
     private FloatingActionButton fab;
     private RecyclerView recyclerView;
-    private List<Contact> mData;
+    private ArrayList<Contact> mData;
     ContactRecyclerAdapter recyclerAdapter;
 
     @Override
@@ -101,11 +101,19 @@ public class MainContactActivity extends AppCompatActivity {
 
 
     public void launchDetailContactActivity(View view){
-        Intent myIntent = new Intent(this,
+        Intent addContact = new Intent(this,
                 DetailContact.class);
-        startActivity(myIntent);
+        startActivityForResult(addContact, 1);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        FileController fw = new FileController(getApplicationContext());
+        mData = fw.readContacts();
+        recyclerAdapter.mDataset = mData;
+        recyclerAdapter.notifyDataSetChanged();
+
+    }
 
 
 

@@ -18,10 +18,17 @@ import com.fafaffy.contacts.Models.Contact;
 
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
 import java.nio.charset.Charset;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 // This activity allows a user to enter a contact's information
 // and either save the contact, or delete an existing contact
@@ -36,6 +43,9 @@ public class DetailContact extends AppCompatActivity {
     private EditText phoneNumberEditText;
     private Button birthdateButton;
     private Button firstMetButton;
+    private List<Contact> listOfContacts;
+    private int selectedContactIndex = -1;
+    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +61,32 @@ public class DetailContact extends AppCompatActivity {
         phoneNumberEditText     = (EditText)findViewById(R.id.phoneNumberTextBox);
         birthdateButton         = (Button)findViewById(R.id.birthdate);
         firstMetButton          = (Button)findViewById(R.id.firstContactDateButton);
+
+
+        // See if we have intents
+        Intent curIntent = getIntent();
+        if (curIntent == null ) {
+            return;
+        }
+
+        Bundle extras = curIntent.getExtras();
+        if (extras != null) {
+            listOfContacts = (ArrayList<Contact>)extras.get("contacts");
+
+            selectedContactIndex = (int)extras.get("index");
+            if (listOfContacts.isEmpty() || selectedContactIndex < 0) return;
+            Contact curContact = listOfContacts.get(selectedContactIndex);
+            firstNameEditText.setText(curContact.getFirstName());
+            middleInitialEditText.setText(curContact.getMiddleInitial().toString());
+            lastNameEditText.setText(curContact.getLastName());
+            phoneNumberEditText.setText(curContact.getPhoneNumber());
+            if (curContact.getBirthday() != null) {
+                birthdateButton.setText(sdf.format(curContact.getBirthday()));
+            }
+            firstMetButton.setText(sdf.format(curContact.getFirstMet()));
+        } else {
+            firstMetButton.setText(sdf.format(Calendar.getInstance().getTime()));
+        }
     }
 
     public void showDatePickerDialog(View v) {
@@ -61,15 +97,28 @@ public class DetailContact extends AppCompatActivity {
     }
 
 
+    // Delete function creates a contact from field data
+    // and then writes the file to contactList.txt on internal private storage
+    public void onDeleteClicked(View v) {
+        if (listOfContacts.size() > 0 && selectedContactIndex >= 0 && selectedContactIndex < listOfContacts.size()) {
+            FileController fw = new FileController(getApplicationContext());
+            listOfContacts.remove(selectedContactIndex);
+            fw.saveAllContacts(listOfContacts);
+        }
+        //display file saved confirmation message
+        Toast.makeText(this, "Contact deleted successfully",
+                Toast.LENGTH_SHORT).show();
+
+        finish();
+    }
     // Save function creates a contact from field data
     // and then writes the file to contactList.txt on internal private storage
     public void onSaveClicked(View v) {
         //Ensure user has filled out all fields before attempting
         //to create a contact object and saving it
-        if(firstNameEditText.getText().toString().equals("") ||
-                lastNameEditText.getText().toString().equals("") ||
-                middleInitialEditText.getText().toString().equals("") ||
-                phoneNumberEditText.getText().toString().equals("")){
+        if(firstNameEditText.getText().toString().isEmpty() ||
+                lastNameEditText.getText().toString().isEmpty() ||
+                phoneNumberEditText.getText().toString().isEmpty()){
                 Toast.makeText(this, "Please fill out all form data before saving.",
                     Toast.LENGTH_SHORT).show();
         }
@@ -77,14 +126,20 @@ public class DetailContact extends AppCompatActivity {
             // Create a new contact from form data
             Contact contact = createContact();
             FileController fw = new FileController(getApplicationContext());
-            fw.saveContact(contact);
+
+            // Modifying existing contact
+            if (listOfContacts != null && listOfContacts.size() > 0 && selectedContactIndex >= 0 && selectedContactIndex < listOfContacts.size()) {
+
+                listOfContacts.set(selectedContactIndex, contact);
+                fw.saveAllContacts(listOfContacts);
+            } else {
+                fw.saveContact(contact);
+            }
             //display file saved confirmation message
             Toast.makeText(this, contact.getFirstName() + " " + contact.getLastName() + " saved successfully",
                     Toast.LENGTH_SHORT).show();
 
-            // Navigate user back to main page where all contacts are displayed
-            Intent intent = new Intent(this, MainContactActivity.class);
-            startActivity(intent);
+            finish();
         }
     }
 
@@ -92,20 +147,24 @@ public class DetailContact extends AppCompatActivity {
     // Middle initial is converted from string to char
     // Birth date & firstMet date are both converted from CharSequence to Date objects
     public Contact createContact()  {
-        return new Contact(
-                firstNameEditText.getText().toString(),
-                middleInitialEditText.getText().toString().charAt(0), //Convert string to char
-                lastNameEditText.getText().toString(),
-                phoneNumberEditText.getText().toString(),
-                convertToDateObject(birthdateButton.getText()),     // Convert CharSequence to Date Obj
-                convertToDateObject(firstMetButton.getText())       // Convert CharSequence to Date Obj
-        );
+        Contact c = new Contact();
+        c.setFirstName(firstNameEditText.getText().toString());
+        c.setLastName(lastNameEditText.getText().toString());
+        c.setFirstMet(convertToDateObject(firstMetButton.getText()));
+        c.setPhoneNumber(phoneNumberEditText.getText().toString());
+        if (middleInitialEditText.getText().length() > 0) {
+            c.setMiddleInitial(middleInitialEditText.getText().charAt(0));
+        }
+        if (!birthdateButton.getText().equals("N/A")) {
+            c.setBirthday(convertToDateObject(birthdateButton.getText()));
+        }
+        return c;
     }
 
     // Helper method from createContact method -- birtdate & firstmet date need to be converted
     // from CharSequence to Date objects to match Contact model
     private Date convertToDateObject(CharSequence input) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+
         Date date = null;
         try {
             date = sdf.parse(input.toString());
