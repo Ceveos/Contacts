@@ -4,6 +4,8 @@ package com.fafaffy.contacts;
 
 
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -22,6 +24,7 @@ import android.widget.EditText;
 
 import com.fafaffy.contacts.Adapters.ContactRecyclerAdapter;
 import com.fafaffy.contacts.Controllers.FileController;
+import com.fafaffy.contacts.Controllers.SensorController;
 import com.fafaffy.contacts.Models.Contact;
 
 import java.util.ArrayList;
@@ -29,14 +32,11 @@ import java.util.List;
 
 public class MainContactActivity extends AppCompatActivity {
 
-
-
-
-
     private FloatingActionButton fab;
     private RecyclerView recyclerView;
     private ArrayList<Contact> mData;
     ContactRecyclerAdapter recyclerAdapter;
+
 
     // Initializes the recycler view and overall main activity
     @Override
@@ -77,6 +77,13 @@ public class MainContactActivity extends AppCompatActivity {
 
         // Set our listview's adapter
         recyclerView.setAdapter(recyclerAdapter);
+
+
+        // Set up our Sensor
+        SensorController sensorController = new SensorController(getApplicationContext());
+        SensorManager sensorManager = sensorController.getSensor();
+
+
     }
 
     @Override
