@@ -1,16 +1,21 @@
 package com.fafaffy.contacts.Controllers;
 
 //Created by Brian on Mar 2-18
+
+import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-public class SensorController implements SensorEventListener {
+public class SensorController extends Activity implements SensorEventListener {
 
     // variable to hold context
     private Context context;
+
+    // Store last updated system time
+    private long lastUpdate;
 
     // create Sensor Manager object
     public SensorManager sensorManager;
@@ -19,6 +24,8 @@ public class SensorController implements SensorEventListener {
     // Constructor takes context input from main class
     public SensorController(Context context){
         this.context = context;
+        //set last updated time
+        lastUpdate = System.currentTimeMillis();
     }
 
     public SensorManager getSensor(){
@@ -28,12 +35,35 @@ public class SensorController implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-
+        if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            getAccelerometer(sensorEvent);
+        }
     }
+
+    private void getAccelerometer(SensorEvent event) {
+        float[] values = event.values;
+        // Movement
+        float x = values[0];
+        float y = values[1];
+        float z = values[2];
+
+        float accelerationSquareRoot = (x * x + y * y + z * z)
+                / (SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH);
+        long actualTime = event.timestamp;
+        if (accelerationSquareRoot >= 2) //
+        {
+            if (actualTime - lastUpdate < 200) {
+                return;
+            }
+            lastUpdate = actualTime;
+        }
+    }
+
+
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
-
+        // Function is Not Needed
     }
 
 

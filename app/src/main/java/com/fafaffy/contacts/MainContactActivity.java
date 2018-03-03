@@ -5,6 +5,7 @@ package com.fafaffy.contacts;
 
 import android.content.Intent;
 import android.hardware.Sensor;
+import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -79,10 +80,8 @@ public class MainContactActivity extends AppCompatActivity {
         recyclerView.setAdapter(recyclerAdapter);
 
 
-        // Set up our Sensor
+        // Instantiate Accelerometer Sensor from controller class
         SensorController sensorController = new SensorController(getApplicationContext());
-        SensorManager sensorManager = sensorController.getSensor();
-
 
     }
 
