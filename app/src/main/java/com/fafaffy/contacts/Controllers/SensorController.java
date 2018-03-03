@@ -8,6 +8,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.util.Log;
 
 public class SensorController extends Activity implements SensorEventListener {
 
@@ -26,12 +27,10 @@ public class SensorController extends Activity implements SensorEventListener {
         this.context = context;
         //set last updated time
         lastUpdate = System.currentTimeMillis();
+        // Assign sensorManager
+        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
     }
 
-    public SensorManager getSensor(){
-        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        return sensorManager;
-    }
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
@@ -40,8 +39,12 @@ public class SensorController extends Activity implements SensorEventListener {
         }
     }
 
-    private void getAccelerometer(SensorEvent event) {
+    public void getAccelerometer(SensorEvent event) {
+
+        Log.e("Accelerometer", "getAccel FUNCTION");
+
         float[] values = event.values;
+
         // Movement
         float x = values[0];
         float y = values[1];
@@ -50,7 +53,7 @@ public class SensorController extends Activity implements SensorEventListener {
         float accelerationSquareRoot = (x * x + y * y + z * z)
                 / (SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH);
         long actualTime = event.timestamp;
-        if (accelerationSquareRoot >= 2) //
+        if (accelerationSquareRoot >= 2)
         {
             if (actualTime - lastUpdate < 200) {
                 return;
