@@ -4,7 +4,6 @@ package com.fafaffy.contacts;
 
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -91,10 +90,9 @@ public class MainContactActivity extends AppCompatActivity implements SensorEven
         recyclerView.setAdapter(recyclerAdapter);
 
 
+        // Add sensor Manager
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
-        // Instantiate Accelerometer Sensor from controller class
-        //SensorController sensorController = new SensorController(getApplicationContext());
 
 
     }
@@ -102,7 +100,7 @@ public class MainContactActivity extends AppCompatActivity implements SensorEven
 
 
 
-
+// SENSOR CODE BEGIN------------------------------------------------------------------------------------------------
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
@@ -153,6 +151,10 @@ public class MainContactActivity extends AppCompatActivity implements SensorEven
         super.onPause();
         sensorManager.unregisterListener(this);
     }
+// SENSOR CODE END------------------------------------------------------------------------------------------------
+
+
+
 
 
 
@@ -199,9 +201,7 @@ public class MainContactActivity extends AppCompatActivity implements SensorEven
         mData = fw.readContacts();
         recyclerAdapter.mDataset = mData;
         recyclerAdapter.notifyDataSetChanged();
-
     }
-
 
 
 }

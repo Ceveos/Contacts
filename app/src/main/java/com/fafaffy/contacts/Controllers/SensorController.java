@@ -2,15 +2,14 @@ package com.fafaffy.contacts.Controllers;
 
 //Created by Brian on Mar 2-18
 
-import android.app.Activity;
 import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
+import android.widget.Toast;
 
-public class SensorController extends Activity implements SensorEventListener {
+public class SensorController  implements SensorEventListener {
 
     // variable to hold context
     private Context context;
@@ -25,30 +24,21 @@ public class SensorController extends Activity implements SensorEventListener {
     // Constructor takes context input from main class
     public SensorController(Context context){
         this.context = context;
-        //set last updated time
+        //Set sensor last updated time
         lastUpdate = System.currentTimeMillis();
-
-    }
-
-    public SensorManager getSensorManager(){
-        // Assign sensorManager
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-        return sensorManager;
     }
-
 
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            Toast.makeText(context, "on sensor changed", Toast.LENGTH_SHORT).show();
             getAccelerometer(sensorEvent);
         }
     }
 
     public void getAccelerometer(SensorEvent event) {
-
-        Log.e("Accelerometer", "getAccel FUNCTION");
-
         float[] values = event.values;
 
         // Movement
@@ -65,9 +55,9 @@ public class SensorController extends Activity implements SensorEventListener {
                 return;
             }
             lastUpdate = actualTime;
+            Toast.makeText(context, "DEVICE WAS SHAKEN", Toast.LENGTH_SHORT).show();
         }
     }
-
 
 
     @Override
