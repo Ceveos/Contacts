@@ -27,9 +27,15 @@ public class SensorController extends Activity implements SensorEventListener {
         this.context = context;
         //set last updated time
         lastUpdate = System.currentTimeMillis();
+
+    }
+
+    public SensorManager getSensorManager(){
         // Assign sensorManager
         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        return sensorManager;
     }
+
 
 
     @Override
