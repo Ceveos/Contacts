@@ -17,23 +17,23 @@ public class SensorController  implements SensorEventListener {
     // Store last updated system time
     private long lastUpdate;
 
-    // create Sensor Manager object
-    public SensorManager sensorManager;
 
-
-    // Constructor takes context input from main class
-    public SensorController(Context context){
+    //Constructor takes context input from main class and
+    // registers the accelerometer with the listener
+    public SensorController(Context context)  {
         this.context = context;
         //Set sensor last updated time
         lastUpdate = System.currentTimeMillis();
-        sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
+        SensorManager manager = (SensorManager)context.getSystemService( Context.SENSOR_SERVICE );
+        Sensor accel = manager.getDefaultSensor( Sensor.TYPE_ACCELEROMETER );
+        manager.registerListener( this, accel, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            Toast.makeText(context, "on sensor changed", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(context, "on sensor changed", Toast.LENGTH_SHORT).show();
             getAccelerometer(sensorEvent);
         }
     }

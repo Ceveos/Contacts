@@ -33,20 +33,12 @@ import com.fafaffy.contacts.Models.Contact;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainContactActivity extends AppCompatActivity implements SensorEventListener{
+public class MainContactActivity extends AppCompatActivity{
 
     private FloatingActionButton fab;
     private RecyclerView recyclerView;
     private ArrayList<Contact> mData;
     ContactRecyclerAdapter recyclerAdapter;
-
-
-
-    // TEST VARS
-    private SensorManager sensorManager;
-    private long lastUpdate;
-
-
 
     // Initializes the recycler view and overall main activity
     @Override
@@ -55,7 +47,6 @@ public class MainContactActivity extends AppCompatActivity implements SensorEven
         setContentView(R.layout.activity_main_contact);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
 
         fab = (FloatingActionButton) findViewById(R.id.addContactButton);
@@ -89,80 +80,11 @@ public class MainContactActivity extends AppCompatActivity implements SensorEven
         // Set our listview's adapter
         recyclerView.setAdapter(recyclerAdapter);
 
-
-        // Add sensor Manager
-        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-
-
+        // Create sensorController object:
+        // created March 4, 2018
+        SensorController sensorController = new SensorController(getApplicationContext());
 
     }
-
-
-
-
-// SENSOR CODE BEGIN------------------------------------------------------------------------------------------------
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            getAccelerometer(event);
-        }
-
-    }
-
-    private void getAccelerometer(SensorEvent event) {
-        float[] values = event.values;
-        // Movement
-        float x = values[0];
-        float y = values[1];
-        float z = values[2];
-
-        float accelationSquareRoot = (x * x + y * y + z * z)
-                / (SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH);
-        long actualTime = event.timestamp;
-        if (accelationSquareRoot >= 2) //
-        {
-            if (actualTime - lastUpdate < 200) {
-                return;
-            }
-            lastUpdate = actualTime;
-            Toast.makeText(this, "Device was shaken", Toast.LENGTH_SHORT)
-                    .show();
-        }
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        //Nada
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // register this class as a listener for the orientation and
-        // accelerometer sensors
-        sensorManager.registerListener(this,
-                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                SensorManager.SENSOR_DELAY_NORMAL);
-    }
-
-    @Override
-    protected void onPause() {
-        // unregister listener
-        super.onPause();
-        sensorManager.unregisterListener(this);
-    }
-// SENSOR CODE END------------------------------------------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
 
 
     @Override
