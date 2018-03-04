@@ -4,6 +4,10 @@ package com.fafaffy.contacts;
 
 
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,24 +23,30 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.fafaffy.contacts.Adapters.ContactRecyclerAdapter;
 import com.fafaffy.contacts.Controllers.FileController;
+import com.fafaffy.contacts.Controllers.SensorController;
 import com.fafaffy.contacts.Models.Contact;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainContactActivity extends AppCompatActivity {
-
-
-
-
+public class MainContactActivity extends AppCompatActivity implements SensorEventListener{
 
     private FloatingActionButton fab;
     private RecyclerView recyclerView;
     private ArrayList<Contact> mData;
     ContactRecyclerAdapter recyclerAdapter;
+
+
+
+    // TEST VARS
+    private SensorManager sensorManager;
+    private long lastUpdate;
+
+
 
     // Initializes the recycler view and overall main activity
     @Override
@@ -45,6 +55,7 @@ public class MainContactActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main_contact);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
 
         fab = (FloatingActionButton) findViewById(R.id.addContactButton);
@@ -77,7 +88,82 @@ public class MainContactActivity extends AppCompatActivity {
 
         // Set our listview's adapter
         recyclerView.setAdapter(recyclerAdapter);
+
+
+        // Add sensor Manager
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+
+
+
     }
+
+
+
+
+// SENSOR CODE BEGIN------------------------------------------------------------------------------------------------
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            getAccelerometer(event);
+        }
+
+    }
+
+    private void getAccelerometer(SensorEvent event) {
+        float[] values = event.values;
+        // Movement
+        float x = values[0];
+        float y = values[1];
+        float z = values[2];
+
+        float accelationSquareRoot = (x * x + y * y + z * z)
+                / (SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH);
+        long actualTime = event.timestamp;
+        if (accelationSquareRoot >= 2) //
+        {
+            if (actualTime - lastUpdate < 200) {
+                return;
+            }
+            lastUpdate = actualTime;
+            Toast.makeText(this, "Device was shaken", Toast.LENGTH_SHORT)
+                    .show();
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        //Nada
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // register this class as a listener for the orientation and
+        // accelerometer sensors
+        sensorManager.registerListener(this,
+                sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        // unregister listener
+        super.onPause();
+        sensorManager.unregisterListener(this);
+    }
+// SENSOR CODE END------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -115,9 +201,7 @@ public class MainContactActivity extends AppCompatActivity {
         mData = fw.readContacts();
         recyclerAdapter.mDataset = mData;
         recyclerAdapter.notifyDataSetChanged();
-
     }
-
 
 
 }
