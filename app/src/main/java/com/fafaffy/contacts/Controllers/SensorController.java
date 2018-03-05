@@ -1,6 +1,6 @@
 package com.fafaffy.contacts.Controllers;
 
-//Created by Brian on Mar 2-18
+// Created by Brian on Mar 2-18
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -17,6 +17,8 @@ public class SensorController  implements SensorEventListener {
     // Store last updated system time
     private long lastUpdate;
 
+    private OnShakeListener listener;
+
 
     //Constructor takes context input from main class and
     // registers the accelerometer with the listener
@@ -27,13 +29,16 @@ public class SensorController  implements SensorEventListener {
         SensorManager manager = (SensorManager)context.getSystemService( Context.SENSOR_SERVICE );
         Sensor accel = manager.getDefaultSensor( Sensor.TYPE_ACCELEROMETER );
         manager.registerListener( this, accel, SensorManager.SENSOR_DELAY_NORMAL);
+        listener = null;
     }
 
+    public void setOnShakeListener(OnShakeListener listener) {
+        this.listener = listener;
+    }
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-//            Toast.makeText(context, "on sensor changed", Toast.LENGTH_SHORT).show();
             getAccelerometer(sensorEvent);
         }
     }
@@ -56,6 +61,7 @@ public class SensorController  implements SensorEventListener {
             }
             lastUpdate = actualTime;
             Toast.makeText(context, "DEVICE WAS SHAKEN", Toast.LENGTH_SHORT).show();
+            listener.OnShake();
         }
     }
 
@@ -63,6 +69,10 @@ public class SensorController  implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
         // Function is Not Needed
+    }
+
+    public interface OnShakeListener {
+        void OnShake();
     }
 
 

@@ -1,5 +1,7 @@
 package com.fafaffy.contacts.Models;
 
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -7,7 +9,7 @@ import java.util.Date;
  * Created by alex on 2/16/18.
  */
 
-public class Contact implements Serializable {
+public class Contact implements Serializable, Comparable<Contact> {
 
     // Empty constructor
     public Contact() {
@@ -28,6 +30,11 @@ public class Contact implements Serializable {
     }
 
 
+    /// Created by Alex 03/04/2018
+    @Override
+    public int compareTo(@NonNull Contact contact) {
+        return this.firstName.compareTo(contact.getFirstName());
+    }
 
 
     public String getFirstName() {

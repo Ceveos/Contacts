@@ -30,7 +30,10 @@ import com.fafaffy.contacts.Controllers.FileController;
 import com.fafaffy.contacts.Controllers.SensorController;
 import com.fafaffy.contacts.Models.Contact;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class MainContactActivity extends AppCompatActivity{
@@ -39,6 +42,7 @@ public class MainContactActivity extends AppCompatActivity{
     private RecyclerView recyclerView;
     private ArrayList<Contact> mData;
     ContactRecyclerAdapter recyclerAdapter;
+    private boolean sortAscending = true;
 
     // Initializes the recycler view and overall main activity
     @Override
@@ -57,6 +61,8 @@ public class MainContactActivity extends AppCompatActivity{
 
         FileController fw = new FileController(getApplicationContext());
         mData = fw.readContacts();
+        Collections.sort(mData);
+
         recyclerAdapter = new ContactRecyclerAdapter(mData);
 
 
@@ -83,6 +89,19 @@ public class MainContactActivity extends AppCompatActivity{
         // Create sensorController object:
         // created March 4, 2018
         SensorController sensorController = new SensorController(getApplicationContext());
+        sensorController.setOnShakeListener(new SensorController.OnShakeListener() {
+
+            @Override
+            public void OnShake() {
+                sortAscending = !sortAscending;
+                if (sortAscending) {
+                    Collections.sort(mData);
+                }else{
+                    Collections.sort(mData, Collections.<Contact>reverseOrder());
+                }
+                recyclerAdapter.notifyDataSetChanged();
+            }
+        });
 
     }
 
