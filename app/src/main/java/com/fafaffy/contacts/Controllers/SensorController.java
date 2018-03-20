@@ -18,16 +18,27 @@ public class SensorController  implements SensorEventListener {
     private long lastUpdate;
 
     private OnShakeListener listener;
+    private float mAccel;
+    private float mAccelCurrent;
+    private float mAccelLast;
 
 
     //Constructor takes context input from main class and
     // registers the accelerometer with the listener
     public SensorController(Context context)  {
         this.context = context;
+
         //Set sensor last updated time
         lastUpdate = System.currentTimeMillis();
         SensorManager manager = (SensorManager)context.getSystemService( Context.SENSOR_SERVICE );
         Sensor accel = manager.getDefaultSensor( Sensor.TYPE_ACCELEROMETER );
+
+        //TEST CODE
+        mAccel = 0.00f;
+        mAccelCurrent = SensorManager.GRAVITY_EARTH;
+        mAccelLast = SensorManager.GRAVITY_EARTH;
+
+
         manager.registerListener( this, accel, SensorManager.SENSOR_DELAY_NORMAL);
         listener = null;
     }
@@ -51,18 +62,17 @@ public class SensorController  implements SensorEventListener {
         float y = values[1];
         float z = values[2];
 
-        float accelerationSquareRoot = (x * x + y * y + z * z)
-                / (SensorManager.GRAVITY_EARTH * SensorManager.GRAVITY_EARTH);
-        long actualTime = event.timestamp;
-        if (accelerationSquareRoot >= 2)
-        {
-            if (actualTime - lastUpdate < 200) {
-                return;
-            }
-            lastUpdate = actualTime;
-            Toast.makeText(context, "DEVICE WAS SHAKEN", Toast.LENGTH_SHORT).show();
+        mAccelLast = mAccelCurrent;
+        mAccelCurrent = (float)Math.sqrt((double) (x*x + y*y + z*z));
+        float delta = mAccelCurrent -mAccelLast;
+        mAccel = mAccel * 0.9f + delta; // low cut filter
+
+        if (mAccel > 12) {
+            Toast toast = Toast.makeText(context, "Device was shaken", Toast.LENGTH_SHORT);
+            toast.show();
             listener.OnShake();
         }
+
     }
 
 
