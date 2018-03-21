@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.fafaffy.contacts.Adapters.ContactRecyclerAdapter;
+import com.fafaffy.contacts.Controllers.DatabaseController;
 import com.fafaffy.contacts.Controllers.FileController;
 import com.fafaffy.contacts.Controllers.SensorController;
 import com.fafaffy.contacts.Models.Contact;
@@ -60,6 +61,16 @@ public class MainContactActivity extends AppCompatActivity{
         mData = new ArrayList<>();
 
         FileController fw = new FileController(getApplicationContext());
+
+
+        //NEW CODE ADDED TO IMPLEMENT SQLITE DB
+        DatabaseController myDb = new DatabaseController(this);
+
+
+
+
+
+
         mData = fw.readContacts();
         Collections.sort(mData);
 

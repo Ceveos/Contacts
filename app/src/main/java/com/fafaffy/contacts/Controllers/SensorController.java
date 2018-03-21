@@ -68,8 +68,6 @@ public class SensorController  implements SensorEventListener {
         mAccel = mAccel * 0.9f + delta; // low cut filter
 
         if (mAccel > 12) {
-            Toast toast = Toast.makeText(context, "Device was shaken", Toast.LENGTH_SHORT);
-            toast.show();
             listener.OnShake();
         }
 

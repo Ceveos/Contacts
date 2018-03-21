@@ -23,6 +23,7 @@ public class DatabaseController extends SQLiteOpenHelper{
     // Database Constructor only creates the Database file
     public DatabaseController(Context context) {
         super(context, DATABASE_NAME, null, 1);
+        SQLiteDatabase db = this.getWritableDatabase();
     }
 
 
@@ -44,8 +45,10 @@ public class DatabaseController extends SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-
+        // If the table is already there, drop this new instance
+        db.execSQL("DROP TABLE IF EXISTS " + db );
+        onCreate(db);
     }
-    
+
 
 }
