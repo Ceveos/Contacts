@@ -7,6 +7,10 @@ import java.util.Date;
 
 /**
  * Created by alex on 2/16/18.
+ * Update by Brian on 3/22/18 to include id field with inclusion of SQL
+ * id field added to getter and setter, but NOT included as part of the constructor.
+ * We only need the id field after the contact has been added to the db, and then we can query
+ * the db to attach an id to it for update purposes.
  */
 
 public class Contact implements Serializable, Comparable<Contact> {
@@ -17,7 +21,7 @@ public class Contact implements Serializable, Comparable<Contact> {
     }
 
     // Full constructor
-    public Contact (String firstName, Character middleInitial, String lastName, String phoneNumber, Object birthday, Date firstMet) {
+    public Contact ( String firstName, Character middleInitial, String lastName, String phoneNumber, Object birthday, Date firstMet) {
         this.firstName = firstName;
         this.middleInitial = middleInitial;
         this.lastName = lastName;
@@ -36,6 +40,9 @@ public class Contact implements Serializable, Comparable<Contact> {
         return this.firstName.compareTo(contact.getFirstName());
     }
 
+    public int getId(){return id;}
+
+    public void setId(int id){this.id = id;}
 
     public String getFirstName() {
         return firstName;
@@ -85,6 +92,7 @@ public class Contact implements Serializable, Comparable<Contact> {
         this.phoneNumber = phoneNumber;
     }
 
+    private int id;
     private String firstName;
     private Character middleInitial;
     private String lastName;

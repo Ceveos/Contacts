@@ -69,7 +69,6 @@ public class DatabaseController extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
 
 
-
         // Assign each value to a 'contentValues' object
         ContentValues contentValues= new ContentValues();
         contentValues.put(COL_2, firstName);
@@ -173,8 +172,20 @@ public class DatabaseController extends SQLiteOpenHelper{
         db.update(TABLE_NAME, contentValues, "id = ?", new String[]{id});
         return true;
 
+    }
+
+
+    // DELETE FUNCTION
+    public Integer delete(String id, String firstName, String lastName, String middleInitial,
+                          String phoneNumber, Object birthdate, Date firstContactDate){
+
+        // Get db instance
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        return db.delete(TABLE_NAME, "ID = ?", new String[]{id} );
 
     }
+
 
 
 }
