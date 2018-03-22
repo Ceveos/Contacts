@@ -136,18 +136,13 @@ public class DetailContact extends AppCompatActivity {
             DatabaseController myDb = new DatabaseController(getApplicationContext());
 
             // Insert contact data into SQLite DB, cast date objects to strings and mid initial to string
+//            myDb.insertData(contact.getFirstName(), contact.getLastName(), contact.getMiddleInitial().toString(),
+//                    contact.getPhoneNumber(), contact.getBirthday().toString(), contact.getFirstMet().toString());
+
             myDb.insertData(contact.getFirstName(), contact.getLastName(), contact.getMiddleInitial().toString(),
-                    contact.getPhoneNumber(), contact.getBirthday().toString(), contact.getFirstMet().toString());
+                    contact.getPhoneNumber(), contact.getBirthday(), contact.getFirstMet());
 
 
-            // Modifying existing contact
-//            if (listOfContacts != null && listOfContacts.size() > 0 && selectedContactIndex >= 0 && selectedContactIndex < listOfContacts.size()) {
-//
-//                listOfContacts.set(selectedContactIndex, contact);
-//                fw.saveAllContacts(listOfContacts);
-//            } else {
-//                fw.saveContact(contact);
-//            }
             //display file saved confirmation message
             Toast.makeText(this, contact.getFirstName() + " " + contact.getLastName() + " saved successfully",
                     Toast.LENGTH_SHORT).show();

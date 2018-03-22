@@ -4,10 +4,19 @@ package com.fafaffy.contacts.Controllers;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import com.fafaffy.contacts.Models.Contact;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class DatabaseController extends SQLiteOpenHelper{
+
+    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 
     public static final String DATABASE_NAME = "contacts.db";
     public static final String TABLE_NAME = "contacts_table";
@@ -51,10 +60,15 @@ public class DatabaseController extends SQLiteOpenHelper{
     }
 
 
-    // Method used to INSERT  Data
+    // Method used to INSERT Data
     public boolean insertData(String firstName, String lastName, String middleInitial,
-                              String phoneNumber, String birthdate, String firstContactDate){
+                              String phoneNumber, Object birthdate, Date firstContactDate){
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+
         SQLiteDatabase db = this.getWritableDatabase();
+
+
 
         // Assign each value to a 'contentValues' object
         ContentValues contentValues= new ContentValues();
@@ -62,8 +76,23 @@ public class DatabaseController extends SQLiteOpenHelper{
         contentValues.put(COL_3, lastName);
         contentValues.put(COL_4, middleInitial);
         contentValues.put(COL_5, phoneNumber);
-        contentValues.put(COL_6, birthdate);
-        contentValues.put(COL_7, firstContactDate);
+
+
+        //------------------------
+        if (birthdate == null) {
+            contentValues.put(COL_6, "N/A");
+
+        } else {
+            contentValues.put(COL_6, dateFormat.format(birthdate).toString());
+        }
+        contentValues.put(COL_7, dateFormat.format(firstContactDate).toString());
+        //------------------------
+
+
+
+//        contentValues.put(COL_6, birthdate);
+//        contentValues.put(COL_7, firstContactDate);
+
 
         // Insert values into the DB thru the contentValues object
         long result = db.insert(TABLE_NAME, null, contentValues);
@@ -76,4 +105,76 @@ public class DatabaseController extends SQLiteOpenHelper{
     }
 
 
+    // Method to get all Database data and return it as an arraylist of contact objects
+    public ArrayList<Contact> getAllData(){
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        Date birthdate = null;
+
+        //Create arraylist to hold result set
+        ArrayList<Contact> listofContacts = new ArrayList<>();
+
+        // Get db instance
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Create cursor object to hold result set
+        Cursor cursorResultSet = db.rawQuery("select * from " + TABLE_NAME, null);
+
+        // Process the result set
+        cursorResultSet.moveToFirst();
+
+        // Add result set data into arraylist
+        while(!cursorResultSet.isAfterLast()) {
+            if (!cursorResultSet.getString(5).isEmpty() && !cursorResultSet.getString(5).equalsIgnoreCase("N/A")) {
+                try {
+                    birthdate = dateFormat.parse(cursorResultSet.getString(5));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            try {
+                listofContacts.add(new Contact(
+                        cursorResultSet.getString(1),                       // Firstname
+                        cursorResultSet.getString(3).charAt(0),             // Middle Initial
+                        cursorResultSet.getString(2),                       // Lastname
+                        cursorResultSet.getString(4),                       // Phone number
+                        birthdate,                                             // Birthdate
+                        dateFormat.parse(cursorResultSet.getString(6))      // First contact date
+                ));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            cursorResultSet.moveToNext();
+        }
+        return listofContacts;
+    }
+
+
+
+
+    // Convert tuple string contents to date object and return
+    private Date convertToDateObject(String input) {
+        Date date = null;
+        try {
+            date = sdf.parse(input);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
+
 }
+
+
+
+
+
+
+
+
+
+
+

@@ -41,7 +41,7 @@ public class MainContactActivity extends AppCompatActivity{
 
     private FloatingActionButton fab;
     private RecyclerView recyclerView;
-    private ArrayList<Contact> mData;
+    public ArrayList<Contact> mData;
     ContactRecyclerAdapter recyclerAdapter;
     private boolean sortAscending = true;
 
@@ -60,22 +60,22 @@ public class MainContactActivity extends AppCompatActivity{
         // Create an empty array list in order to define our recycler view adapter
         mData = new ArrayList<>();
 
-        FileController fw = new FileController(getApplicationContext());
+//        FileController fw = new FileController(getApplicationContext());
 
 
-        //NEW CODE ADDED TO IMPLEMENT SQLITE DB
+        //NEW CODE ADDED TO GET ALL THE SQLite DB data on create
         DatabaseController myDb = new DatabaseController(this);
 
+        // Call get all data func from db instance
+        //myDb.getAllData();
+
+        // Old file controller code to read contacts
+        //mData = fw.readContacts();
 
 
 
-
-
-        mData = fw.readContacts();
         Collections.sort(mData);
-
         recyclerAdapter = new ContactRecyclerAdapter(mData);
-
 
         // Set the properties of the recyclerview (the layout, and animations)
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -149,8 +149,14 @@ public class MainContactActivity extends AppCompatActivity{
     // When the user creates/deletes or edits an activity, refresh the contacts list
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        FileController fw = new FileController(getApplicationContext());
-        mData = fw.readContacts();
+//        FileController fw = new FileController(getApplicationContext());
+//        mData = fw.readContacts();
+
+        //NEW CODE ADDED TO GET ALL THE SQLite DB data on create
+        DatabaseController myDb = new DatabaseController(getApplicationContext());
+        // Call get all data func from db instance
+        myDb.getAllData();
+
         recyclerAdapter.mDataset = mData;
         recyclerAdapter.notifyDataSetChanged();
     }
