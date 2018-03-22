@@ -67,7 +67,7 @@ public class MainContactActivity extends AppCompatActivity{
         DatabaseController myDb = new DatabaseController(this);
 
         // Call get all data func from db instance
-        //myDb.getAllData();
+        mData = myDb.getAllData();
 
         // Old file controller code to read contacts
         //mData = fw.readContacts();
