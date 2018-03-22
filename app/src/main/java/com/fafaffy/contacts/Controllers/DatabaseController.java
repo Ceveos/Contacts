@@ -78,7 +78,6 @@ public class DatabaseController extends SQLiteOpenHelper{
         contentValues.put(COL_5, phoneNumber);
 
 
-        //------------------------
         if (birthdate == null) {
             contentValues.put(COL_6, "N/A");
 
@@ -86,13 +85,6 @@ public class DatabaseController extends SQLiteOpenHelper{
             contentValues.put(COL_6, dateFormat.format(birthdate).toString());
         }
         contentValues.put(COL_7, dateFormat.format(firstContactDate).toString());
-        //------------------------
-
-
-
-//        contentValues.put(COL_6, birthdate);
-//        contentValues.put(COL_7, firstContactDate);
-
 
         // Insert values into the DB thru the contentValues object
         long result = db.insert(TABLE_NAME, null, contentValues);
@@ -152,29 +144,37 @@ public class DatabaseController extends SQLiteOpenHelper{
     }
 
 
+    // UPDATE FUNCTION NEEDS THE ID PASSED AS WELL
+    public boolean update(String id, String firstName, String lastName, String middleInitial,
+                          String phoneNumber, Object birthdate, Date firstContactDate){
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
-    // Convert tuple string contents to date object and return
-    private Date convertToDateObject(String input) {
-        Date date = null;
-        try {
-            date = sdf.parse(input);
-        } catch (Exception e) {
-            e.printStackTrace();
+        // Get db instance
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Assign each value to a 'contentValues' object
+        ContentValues contentValues= new ContentValues();
+        contentValues.put(COL_1, id);
+        contentValues.put(COL_2, firstName);
+        contentValues.put(COL_3, lastName);
+        contentValues.put(COL_4, middleInitial);
+        contentValues.put(COL_5, phoneNumber);
+
+        if (birthdate == null) {
+            contentValues.put(COL_6, "N/A");
+
+        } else {
+            contentValues.put(COL_6, dateFormat.format(birthdate).toString());
         }
-        return date;
+        contentValues.put(COL_7, dateFormat.format(firstContactDate).toString());
+
+        // call update function where id equals whatever
+        db.update(TABLE_NAME, contentValues, "id = ?", new String[]{id});
+        return true;
+
+
     }
 
 
 }
-
-
-
-
-
-
-
-
-
-
-

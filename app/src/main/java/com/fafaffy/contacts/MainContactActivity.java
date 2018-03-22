@@ -155,7 +155,7 @@ public class MainContactActivity extends AppCompatActivity{
         //NEW CODE ADDED TO GET ALL THE SQLite DB data on create
         DatabaseController myDb = new DatabaseController(getApplicationContext());
         // Call get all data func from db instance
-        myDb.getAllData();
+        mData = myDb.getAllData();
 
         recyclerAdapter.mDataset = mData;
         recyclerAdapter.notifyDataSetChanged();
