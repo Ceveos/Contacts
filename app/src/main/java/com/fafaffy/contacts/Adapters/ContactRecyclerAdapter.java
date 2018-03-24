@@ -61,7 +61,7 @@ public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactRecycler
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        Contact dataModel = mDataset.get(position);
+        final Contact dataModel = mDataset.get(position);
         holder.name.setText(dataModel.getFirstName());
 
         holder.itemView.setOnClickListener(new View.OnClickListener()
@@ -72,7 +72,7 @@ public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactRecycler
                 final Intent intent;
                 intent =  new Intent(holder.context, DetailContact.class);
                 intent.putExtra("contacts", mDataset);
-                intent.putExtra("index", position);
+                intent.putExtra("index", dataModel.getID());
                 ((Activity)holder.context).startActivityForResult(intent, 1);
             }
         });

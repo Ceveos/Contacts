@@ -46,6 +46,7 @@ public class DetailContact extends AppCompatActivity {
     private Button firstMetButton;
     private List<Contact> listOfContacts;
     private int selectedContactIndex = -1;
+    private DatabaseController controller;
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 
     @Override
@@ -62,7 +63,7 @@ public class DetailContact extends AppCompatActivity {
         phoneNumberEditText     = (EditText)findViewById(R.id.phoneNumberTextBox);
         birthdateButton         = (Button)findViewById(R.id.birthdate);
         firstMetButton          = (Button)findViewById(R.id.firstContactDateButton);
-
+        controller = new DatabaseController(getApplicationContext());
 
         // See if we have intents
         Intent curIntent = getIntent();
@@ -75,10 +76,15 @@ public class DetailContact extends AppCompatActivity {
             listOfContacts = (ArrayList<Contact>)extras.get("contacts");
 
             selectedContactIndex = (int)extras.get("index");
-            if (listOfContacts.isEmpty() || selectedContactIndex < 0) return;
-            Contact curContact = listOfContacts.get(selectedContactIndex);
+
+            controller.getContactByID(selectedContactIndex);
+            Contact curContact = controller.getContactByID(selectedContactIndex);
+            if (curContact == null) return;
+
             firstNameEditText.setText(curContact.getFirstName());
-            middleInitialEditText.setText(curContact.getMiddleInitial().toString());
+            if (curContact.getMiddleInitial() != null)
+                middleInitialEditText.setText(curContact.getMiddleInitial().toString());
+
             lastNameEditText.setText(curContact.getLastName());
             phoneNumberEditText.setText(curContact.getPhoneNumber());
             if (curContact.getBirthday() != null) {
@@ -103,11 +109,14 @@ public class DetailContact extends AppCompatActivity {
     // Delete function creates a contact from field data
     // and then writes the file to contactList.txt on internal private storage
     public void onDeleteClicked(View v) {
-        if (listOfContacts.size() > 0 && selectedContactIndex >= 0 && selectedContactIndex < listOfContacts.size()) {
-            FileController fw = new FileController(getApplicationContext());
-            listOfContacts.remove(selectedContactIndex);
-            fw.saveAllContacts(listOfContacts);
+        if (selectedContactIndex == -1 )
+            finish();
+
+        // Triple check that' we're not dumb and the contact exists
+        if (controller.getContactByID(selectedContactIndex) != null) {
+            controller.delete(selectedContactIndex);
         }
+
         //display file saved confirmation message
         Toast.makeText(this, "Contact deleted successfully",
                 Toast.LENGTH_SHORT).show();
@@ -129,15 +138,32 @@ public class DetailContact extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
         }
         else {
+
             // Create a new contact from form data
             Contact contact = createContact();
 
             // Create db instance
             DatabaseController myDb = new DatabaseController(getApplicationContext());
 
-            // Insert contact data into SQLite DB, cast date objects to strings and mid initial to string
-            myDb.insertData(contact.getFirstName(), contact.getLastName(), contact.getMiddleInitial().toString(),
-                    contact.getPhoneNumber(), contact.getBirthday(), contact.getFirstMet());
+            String middleInitial = "";
+            // Check middle initial
+            if (contact.getMiddleInitial() != null) {
+                middleInitial = contact.getMiddleInitial().toString();
+            }
+
+            // If we're updating a record
+            if (selectedContactIndex != -1) {
+                // Insert contact data into SQLite DB, cast date objects to strings and mid initial to string
+                myDb.update(selectedContactIndex, contact.getFirstName(), contact.getLastName(), middleInitial,
+                        contact.getPhoneNumber(), contact.getBirthday(), contact.getFirstMet());
+            } else {
+                // If we're inserting a record
+
+                // Insert contact data into SQLite DB, cast date objects to strings and mid initial to string
+                myDb.insertData(contact.getFirstName(), contact.getLastName(), middleInitial,
+                        contact.getPhoneNumber(), contact.getBirthday(), contact.getFirstMet());
+
+            }
 
             //display file saved confirmation message
             Toast.makeText(this, contact.getFirstName() + " " + contact.getLastName() + " saved successfully",

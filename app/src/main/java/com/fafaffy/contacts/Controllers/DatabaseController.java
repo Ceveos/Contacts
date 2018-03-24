@@ -9,6 +9,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import com.fafaffy.contacts.Models.Contact;
 
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -68,6 +73,10 @@ public class DatabaseController extends SQLiteOpenHelper{
 
         SQLiteDatabase db = this.getWritableDatabase();
 
+        if (middleInitial == null)
+            middleInitial = "";
+        if (phoneNumber == null)
+            phoneNumber = "";
 
 
         // Assign each value to a 'contentValues' object
@@ -79,7 +88,7 @@ public class DatabaseController extends SQLiteOpenHelper{
 
 
         if (birthdate == null) {
-            contentValues.put(COL_6, "N/A");
+            contentValues.put(COL_6, "");
 
         } else {
             contentValues.put(COL_6, dateFormat.format(birthdate).toString());
@@ -96,6 +105,49 @@ public class DatabaseController extends SQLiteOpenHelper{
         else return true;
     }
 
+    // Created by the non-lazy Alex
+    public Contact getContactByID(int id) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        Date birthdate = null;
+
+        // Get db instance
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Create cursor object to hold result set
+        Cursor cursorResultSet = db.rawQuery(String.format("select * from %s WHERE id = ?", TABLE_NAME), new String[] {Integer.toString(id)});
+
+        // Process the result set
+        cursorResultSet.moveToFirst();
+        // Add result set data into arraylist
+        while(!cursorResultSet.isAfterLast()) {
+
+            if (!cursorResultSet.getString(5).isEmpty() && !cursorResultSet.getString(5).equalsIgnoreCase("N/A")) {
+                try {
+                    birthdate = dateFormat.parse(cursorResultSet.getString(5));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            try {
+                return new Contact(
+                        cursorResultSet.getString(1),                       // Firstname
+                        cursorResultSet.getString(3).length() <= 0
+                                ? null : cursorResultSet.getString(3).charAt(0),             // Middle Initial
+                        cursorResultSet.getString(2),                       // Lastname
+                        cursorResultSet.getString(4),                       // Phone number
+                        birthdate,                                             // Birthdate
+                        dateFormat.parse(cursorResultSet.getString(6)),      // First contact date
+                        Integer.parseInt(cursorResultSet.getString(0))
+                );
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            cursorResultSet.moveToNext();
+        }
+        return null;
+    }
 
     // Method to get all Database data and return it as an arraylist of contact objects
     public ArrayList<Contact> getAllData(){
@@ -128,11 +180,13 @@ public class DatabaseController extends SQLiteOpenHelper{
             try {
                 listofContacts.add(new Contact(
                         cursorResultSet.getString(1),                       // Firstname
-                        cursorResultSet.getString(3).charAt(0),             // Middle Initial
+                        cursorResultSet.getString(3).length() <= 0
+                                ? null : cursorResultSet.getString(3).charAt(0),             // Middle Initial
                         cursorResultSet.getString(2),                       // Lastname
                         cursorResultSet.getString(4),                       // Phone number
                         birthdate,                                             // Birthdate
-                        dateFormat.parse(cursorResultSet.getString(6))      // First contact date
+                        dateFormat.parse(cursorResultSet.getString(6)),      // First contact date
+                        Integer.parseInt(cursorResultSet.getString(0))
                 ));
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -145,7 +199,7 @@ public class DatabaseController extends SQLiteOpenHelper{
 
 
     // UPDATE FUNCTION NEEDS THE ID PASSED AS WELL
-    public boolean update(String id, String firstName, String lastName, String middleInitial,
+    public boolean update(int id, String firstName, String lastName, String middleInitial,
                           String phoneNumber, Object birthdate, Date firstContactDate){
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
@@ -170,11 +224,39 @@ public class DatabaseController extends SQLiteOpenHelper{
         contentValues.put(COL_7, dateFormat.format(firstContactDate).toString());
 
         // call update function where id equals whatever
-        db.update(TABLE_NAME, contentValues, "id = ?", new String[]{id});
+        db.update(TABLE_NAME, contentValues, "id = ?", new String[]{Integer.toString(id)});
         return true;
 
 
     }
 
 
+    public Integer delete(int id){
+        // Get db instance
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.delete(TABLE_NAME, "ID = ?", new String[]{Integer.toString(id)} );
+    }
+
+    public void deleteAllUsers() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NAME, null, null );
+    }
+
+    public void loadContactsFromFile(String filepath) {
+        try {
+            // Try to read the file
+            FileInputStream fileStream = new FileInputStream(filepath);
+            DataInputStream in = new DataInputStream(fileStream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+            String line = "";
+
+            // For each line...
+            while((line = br.readLine()) != null) {
+                // Attempt to parse this as a contact
+
+            }
+        } catch (Exception e) {
+            // File does not exist
+        }
+    }
 }

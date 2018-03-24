@@ -8,6 +8,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -31,6 +32,8 @@ import com.fafaffy.contacts.Controllers.FileController;
 import com.fafaffy.contacts.Controllers.SensorController;
 import com.fafaffy.contacts.Models.Contact;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +44,9 @@ public class MainContactActivity extends AppCompatActivity{
 
     private FloatingActionButton fab;
     private RecyclerView recyclerView;
+    private MenuItem LoadContactsFromFile;
+    private MenuItem Reinitialize;
+    final int ACTIVITY_CHOOSE_FILE = 1;
     public ArrayList<Contact> mData;
     ContactRecyclerAdapter recyclerAdapter;
     private boolean sortAscending = true;
@@ -131,10 +137,18 @@ public class MainContactActivity extends AppCompatActivity{
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
+        // If we're loading from a file, call appropriate method
+        if (id == R.id.load_from_file) {
+            loadContactsFromFile();
+            return true;
+        }
+
+        // If we're reinitializing the db, call appropriate method
+        if (id == R.id.reinitialize) {
+            reinitialize();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -149,11 +163,23 @@ public class MainContactActivity extends AppCompatActivity{
     // When the user creates/deletes or edits an activity, refresh the contacts list
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        FileController fw = new FileController(getApplicationContext());
-//        mData = fw.readContacts();
 
         //NEW CODE ADDED TO GET ALL THE SQLite DB data on create
         DatabaseController myDb = new DatabaseController(getApplicationContext());
+
+        switch(requestCode) {
+            case ACTIVITY_CHOOSE_FILE: {
+                if (resultCode == RESULT_OK){
+                    Uri uri = data.getData();
+                    String filePath = uri.getPath();
+
+                    myDb.loadContactsFromFile(filePath);
+
+                }
+            }
+        }
+
+
         // Call get all data func from db instance
         mData = myDb.getAllData();
 
@@ -161,5 +187,20 @@ public class MainContactActivity extends AppCompatActivity{
         recyclerAdapter.notifyDataSetChanged();
     }
 
+    public void loadContactsFromFile() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("file/*.txt");
+        startActivityForResult(intent, ACTIVITY_CHOOSE_FILE);
+    }
 
+    public void reinitialize() {
+        DatabaseController myDb = new DatabaseController(getApplicationContext());
+        // Call delete all users function
+        myDb.deleteAllUsers();
+        // Refresh users list
+        mData = myDb.getAllData();
+
+        recyclerAdapter.mDataset = mData;
+        recyclerAdapter.notifyDataSetChanged();
+    }
 }
