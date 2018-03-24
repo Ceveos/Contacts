@@ -16,6 +16,12 @@ public class Contact implements Serializable, Comparable<Contact> {
 
     }
 
+    // Full constructor plus id
+    public Contact (String firstName, Character middleInitial, String lastName, String phoneNumber, Object birthday, Date firstMet, int id) {
+        this(firstName, middleInitial, lastName, phoneNumber, birthday, firstMet);
+        this.id = id;
+    }
+
     // Full constructor
     public Contact (String firstName, Character middleInitial, String lastName, String phoneNumber, Object birthday, Date firstMet) {
         this.firstName = firstName;
@@ -36,6 +42,9 @@ public class Contact implements Serializable, Comparable<Contact> {
         return this.firstName.compareTo(contact.getFirstName());
     }
 
+    public int getId(){return id;}
+
+    public void setId(int id){this.id = id;}
 
     public String getFirstName() {
         return firstName;
@@ -91,5 +100,6 @@ public class Contact implements Serializable, Comparable<Contact> {
     private Date birthday;
     private Date firstMet;
     private String phoneNumber;
+    private int id;
 
 }
