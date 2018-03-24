@@ -16,12 +16,6 @@ public class Contact implements Serializable, Comparable<Contact> {
 
     }
 
-    // Full constructor plus id
-    public Contact (String firstName, Character middleInitial, String lastName, String phoneNumber, Object birthday, Date firstMet, int id) {
-        this(firstName, middleInitial, lastName, phoneNumber, birthday, firstMet);
-        this.id = id;
-    }
-
     // Full constructor
     public Contact (String firstName, Character middleInitial, String lastName, String phoneNumber, Object birthday, Date firstMet) {
         this.firstName = firstName;
@@ -91,15 +85,11 @@ public class Contact implements Serializable, Comparable<Contact> {
         this.phoneNumber = phoneNumber;
     }
 
-    public void setID(int id) { this.id = id; }
-    public int getID() { return this.id; }
-
     private String firstName;
     private Character middleInitial;
     private String lastName;
     private Date birthday;
     private Date firstMet;
     private String phoneNumber;
-    private int id;
 
 }
