@@ -3,6 +3,7 @@ package com.fafaffy.contacts;
 /* Created by Alex Casasola & Brian Gardner */
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -12,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -143,6 +145,12 @@ public class MainContactActivity extends AppCompatActivity{
             return true;
         }
 
+        if (id == R.id.save_to_file)
+        {
+            saveContactToFile();
+            return true;
+        }
+
         // If we're reinitializing the db, call appropriate method
         if (id == R.id.reinitialize) {
             reinitialize();
@@ -171,9 +179,8 @@ public class MainContactActivity extends AppCompatActivity{
             case ACTIVITY_CHOOSE_FILE: {
                 if (resultCode == RESULT_OK){
                     Uri uri = data.getData();
-                    String filePath = uri.getPath();
 
-                    myDb.loadContactsFromFile(filePath);
+                    myDb.loadContactsFromFile(uri);
 
                 }
             }
@@ -188,9 +195,31 @@ public class MainContactActivity extends AppCompatActivity{
     }
 
     public void loadContactsFromFile() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("file/*.txt");
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.setType("text/*");
         startActivityForResult(intent, ACTIVITY_CHOOSE_FILE);
+    }
+
+    public void saveContactToFile() {
+        final EditText txtUrl = new EditText(this);
+
+        // Set the default text to a link of the Queen
+        txtUrl.setText("contacts.txt");
+        final DatabaseController myDb = new DatabaseController(this);
+        new AlertDialog.Builder(this)
+                .setTitle("Save Contacts to File")
+                .setMessage("Choose file name to store on device")
+                .setView(txtUrl)
+                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        myDb.saveContactsToFile(txtUrl.getText().toString());
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                })
+                .show();
     }
 
     public void reinitialize() {

@@ -72,7 +72,7 @@ public class ContactRecyclerAdapter extends RecyclerView.Adapter<ContactRecycler
                 final Intent intent;
                 intent =  new Intent(holder.context, DetailContact.class);
                 intent.putExtra("contacts", mDataset);
-                intent.putExtra("index", dataModel.getID());
+                intent.putExtra("index", dataModel.getId());
                 ((Activity)holder.context).startActivityForResult(intent, 1);
             }
         });

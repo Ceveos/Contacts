@@ -173,42 +173,6 @@ public class DetailContact extends AppCompatActivity {
         }
     }
 
-
-
-
-//   OLD SAVE FUNCTION USING FILES----------------------------------
-//    // Save function creates a contact from field data
-//    // and then writes the file to contactList.txt on internal private storage
-//    public void onSaveClicked(View v) {
-//        //Ensure user has filled out all fields before attempting
-//        //to create a contact object and saving it
-//        if(firstNameEditText.getText().toString().isEmpty() ||
-//                lastNameEditText.getText().toString().isEmpty() ||
-//                phoneNumberEditText.getText().toString().isEmpty()){
-//                Toast.makeText(this, "Please fill out all form data before saving.",
-//                    Toast.LENGTH_SHORT).show();
-//        }
-//        else {
-//            // Create a new contact from form data
-//            Contact contact = createContact();
-//            FileController fw = new FileController(getApplicationContext());
-//
-//            // Modifying existing contact
-//            if (listOfContacts != null && listOfContacts.size() > 0 && selectedContactIndex >= 0 && selectedContactIndex < listOfContacts.size()) {
-//
-//                listOfContacts.set(selectedContactIndex, contact);
-//                fw.saveAllContacts(listOfContacts);
-//            } else {
-//                fw.saveContact(contact);
-//            }
-//            //display file saved confirmation message
-//            Toast.makeText(this, contact.getFirstName() + " " + contact.getLastName() + " saved successfully",
-//                    Toast.LENGTH_SHORT).show();
-//
-//            finish();
-//        }
-//    }
-
     // Method creates a contact from form input
     // Middle initial is converted from string to char
     // Birth date & firstMet date are both converted from CharSequence to Date objects

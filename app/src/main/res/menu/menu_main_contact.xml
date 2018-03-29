@@ -9,6 +9,12 @@
         app:showAsAction="never"
         />
     <item
+        android:id="@+id/save_to_file"
+        android:orderInCategory="100"
+        android:title="@string/save_to_file"
+        app:showAsAction="never"
+        />
+    <item
         android:id="@+id/reinitialize"
         android:orderInCategory="100"
         android:title="@string/reinitialize"

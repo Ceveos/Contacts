@@ -2,18 +2,35 @@ package com.fafaffy.contacts.Controllers;
 
 // Created by Brian on 3/21/18.
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
+import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+
+import com.fafaffy.contacts.DetailContact;
+import com.fafaffy.contacts.MainContactActivity;
 import com.fafaffy.contacts.Models.Contact;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URI;
+import java.sql.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,12 +49,14 @@ public class DatabaseController extends SQLiteOpenHelper{
     public static final String COL_5  = "PHONE_NUMBER";
     public static final String COL_6  = "BIRTHDATE";
     public static final String COL_7  = "FIRST_CONTACT_DATE";
+    public Context curContext;
 
 
     // Database Constructor only creates the Database file
     public DatabaseController(Context context) {
         super(context, DATABASE_NAME, null, 1);
         //SQLiteDatabase db = this.getWritableDatabase();
+        curContext = context;
     }
 
 
@@ -93,7 +112,12 @@ public class DatabaseController extends SQLiteOpenHelper{
         } else {
             contentValues.put(COL_6, dateFormat.format(birthdate).toString());
         }
-        contentValues.put(COL_7, dateFormat.format(firstContactDate).toString());
+
+        if (firstContactDate == null) {
+            contentValues.put(COL_7, "");
+        } else {
+            contentValues.put(COL_7, dateFormat.format(firstContactDate).toString());
+        }
 
         // Insert values into the DB thru the contentValues object
         long result = db.insert(TABLE_NAME, null, contentValues);
@@ -242,10 +266,10 @@ public class DatabaseController extends SQLiteOpenHelper{
         db.delete(TABLE_NAME, null, null );
     }
 
-    public void loadContactsFromFile(String filepath) {
+    public void loadContactsFromFile(Uri filepath) {
         try {
             // Try to read the file
-            FileInputStream fileStream = new FileInputStream(filepath);
+            InputStream fileStream = curContext.getContentResolver().openInputStream(filepath);
             DataInputStream in = new DataInputStream(fileStream);
             BufferedReader br = new BufferedReader(new InputStreamReader(in));
             String line = "";
@@ -253,10 +277,73 @@ public class DatabaseController extends SQLiteOpenHelper{
             // For each line...
             while((line = br.readLine()) != null) {
                 // Attempt to parse this as a contact
+                String[] data = line.split("\t");
+
+                try
+                {
+                    // First Name
+                    // Middle Initial
+                    // Last Name
+                    // Phone Number
+                    // Birthday
+                    // First Met
+                    // If less than 6, not a valid line to parse
+                    if (data.length < 6 ) continue;
+                    if (data[0] == ""  || data[2] == "") continue;
+                    this.insertData(data[0], data[1], data[2],data[3],convertToDateObject(data[4]),convertToDateObject(data[5]));
+
+                } catch(Exception e) {
+                    // Could not load this line of data
+                }
+
 
             }
         } catch (Exception e) {
             // File does not exist
+            int i = 1;
         }
     }
+
+    public void saveContactsToFile(String filepath) {
+        try {
+            if (ContextCompat.checkSelfPermission(curContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    != PackageManager.PERMISSION_GRANTED) {
+                // Permission is not granted
+
+                ActivityCompat.requestPermissions((Activity) curContext, new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            }
+
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filepath);
+            FileWriter writer = new FileWriter(file, false);
+
+            ArrayList<Contact> contacts = this.getAllData();
+            for (Contact c : contacts)
+            {
+                writer.write(c.getFirstName() + "\t");
+                writer.write(c.getMiddleInitial() + "\t");
+                writer.write(c.getLastName() + "\t");
+                writer.write(c.getPhoneNumber() + "\t");
+                writer.write(sdf.format(c.getBirthday()) + "\t");
+                writer.write(sdf.format(c.getFirstMet()) + "\n");
+            }
+            writer.flush();
+            writer.close();
+        } catch (Exception e) {
+            int i =1;
+        }
+    }
+
+    // Helper method from createContact method -- birtdate & firstmet date need to be converted
+    // from CharSequence to Date objects to match Contact model
+    private Date convertToDateObject(CharSequence input) {
+
+        Date date = null;
+        try {
+            date = sdf.parse(input.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+
 }
