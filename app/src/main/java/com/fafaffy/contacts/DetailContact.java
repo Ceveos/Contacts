@@ -2,7 +2,6 @@ package com.fafaffy.contacts;
 
 /* Created by Alex Casasola & Brian Gardner */
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,22 +12,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.fafaffy.contacts.Controllers.DatabaseController;
-import com.fafaffy.contacts.Controllers.FileController;
 import com.fafaffy.contacts.Fragments.DatePickerFragment;
 import com.fafaffy.contacts.Models.Contact;
 
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.lang.reflect.Array;
-import java.nio.charset.Charset;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 // This activity allows a user to enter a contact's information
@@ -44,6 +34,15 @@ public class DetailContact extends AppCompatActivity {
     private EditText phoneNumberEditText;
     private Button birthdateButton;
     private Button firstMetButton;
+
+    // PHASE 4 Form Field Variables
+    private EditText addressLineOneEditText;
+    private EditText addressLineTwoEditText;
+    private EditText cityEditText;
+    private EditText stateEditText;
+    private EditText zipCodeEditText;
+
+
     private List<Contact> listOfContacts;
     private int selectedContactIndex = -1;
     private DatabaseController controller;
@@ -63,6 +62,16 @@ public class DetailContact extends AppCompatActivity {
         phoneNumberEditText     = (EditText)findViewById(R.id.phoneNumberTextBox);
         birthdateButton         = (Button)findViewById(R.id.birthdate);
         firstMetButton          = (Button)findViewById(R.id.firstContactDateButton);
+
+        // PHASE 4 Form Field Additions
+        addressLineOneEditText = (EditText)findViewById(R.id.AddressLine1TextBox);
+        addressLineTwoEditText = (EditText)findViewById(R.id.AddressLine2TextBox);
+        cityEditText           = (EditText)findViewById(R.id.CityTextBox);
+        stateEditText          = (EditText)findViewById(R.id.StateTextBox);
+        zipCodeEditText        = (EditText)findViewById(R.id.ZipCodeTextBox);
+
+
+
         controller = new DatabaseController(getApplicationContext());
 
         // See if we have intents

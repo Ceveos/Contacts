@@ -154,7 +154,7 @@
         app:layout_constraintTop_toBottomOf="@+id/birthdate" />
 
     <EditText
-        android:id="@+id/Address1TextBox"
+        android:id="@+id/AddressLine1TextBox"
         android:layout_width="218dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -180,7 +180,7 @@
         android:hint="Address 2"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/Address1TextBox"
+        app:layout_constraintStart_toEndOf="@+id/AddressLine1TextBox"
         app:layout_constraintTop_toBottomOf="@+id/lastNameTextBox" />
 
     <EditText
@@ -195,7 +195,7 @@
         android:hint="City"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/Address1TextBox" />
+        app:layout_constraintTop_toBottomOf="@+id/AddressLine1TextBox" />
 
     <EditText
         android:id="@+id/StateTextBox"
@@ -211,7 +211,7 @@
         app:layout_constraintTop_toBottomOf="@+id/AddressLine2TextBox" />
 
     <EditText
-        android:id="@+id/editText5"
+        android:id="@+id/ZipCodeTextBox"
         android:layout_width="84dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -236,6 +236,6 @@
         android:text="Map Address"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/phoneNumberTextBox"
-        app:layout_constraintTop_toBottomOf="@+id/editText5" />
+        app:layout_constraintTop_toBottomOf="@+id/ZipCodeTextBox" />
 
 </android.support.constraint.ConstraintLayout>

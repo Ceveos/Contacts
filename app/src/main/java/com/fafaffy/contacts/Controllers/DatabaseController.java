@@ -37,19 +37,28 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class DatabaseController extends SQLiteOpenHelper{
+    public Context curContext;
 
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
 
     public static final String DATABASE_NAME = "contacts.db";
     public static final String TABLE_NAME = "contacts_table";
-    public static final String COL_1 = "ID";
-    public static final String COL_2 = "FIRST_NAME";
-    public static final String COL_3 = "LAST_NAME";
+    public static final String COL_1  = "ID";
+    public static final String COL_2  = "FIRST_NAME";
+    public static final String COL_3  = "LAST_NAME";
     public static final String COL_4  = "MIDDLE_INITIAL";
     public static final String COL_5  = "PHONE_NUMBER";
     public static final String COL_6  = "BIRTHDATE";
     public static final String COL_7  = "FIRST_CONTACT_DATE";
-    public Context curContext;
+
+    // PHASE 4 Variable Additions:
+    public static final String COL_8  = "ADDRESS_LINE_ONE";
+    public static final String COL_9  = "ADDRESS_LINE_TWO";
+    public static final String COL_10 = "CITY";
+    public static final String COL_11 = "STATE";
+    public static final String COL_12 = "ZIP";
+
+
 
 
     // Database Constructor only creates the Database file
@@ -71,7 +80,12 @@ public class DatabaseController extends SQLiteOpenHelper{
                 "MIDDLE_INITIAL TEXT, " +
                 "PHONE_NUMBER TEXT, " +
                 "BIRTHDATE TEXT, " +
-                "FIRST_CONTACT_DATE TEXT) " +
+                "FIRST_CONTACT_DATE TEXT, " +
+                "ADDRESS_LINE_ONE TEXT, " +
+                "ADDRESS_LINE_TWO TEXT, " +
+                "CITY TEXT, " +
+                "STATE TEXT, " +
+                "ZIP TEXT) " +
                 "");
     }
 
