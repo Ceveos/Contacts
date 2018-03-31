@@ -59,8 +59,6 @@ public class DatabaseController extends SQLiteOpenHelper{
     public static final String COL_12 = "ZIP";
 
 
-
-
     // Database Constructor only creates the Database file
     public DatabaseController(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -100,7 +98,9 @@ public class DatabaseController extends SQLiteOpenHelper{
 
     // Method used to INSERT Data
     public boolean insertData(String firstName, String lastName, String middleInitial,
-                              String phoneNumber, Object birthdate, Date firstContactDate){
+                              String phoneNumber, Object birthdate, Date firstContactDate,
+                              String addressLineOne, String addressLineTwo, String city,
+                              String state, String zipCode){
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
@@ -119,7 +119,6 @@ public class DatabaseController extends SQLiteOpenHelper{
         contentValues.put(COL_4, middleInitial);
         contentValues.put(COL_5, phoneNumber);
 
-
         if (birthdate == null) {
             contentValues.put(COL_6, "");
 
@@ -132,6 +131,14 @@ public class DatabaseController extends SQLiteOpenHelper{
         } else {
             contentValues.put(COL_7, dateFormat.format(firstContactDate).toString());
         }
+
+        // PHASE 4 Additions
+        contentValues.put(COL_8, addressLineOne);
+        contentValues.put(COL_9, addressLineTwo);
+        contentValues.put(COL_10, city);
+        contentValues.put(COL_11, state);
+        contentValues.put(COL_12, zipCode);
+
 
         // Insert values into the DB thru the contentValues object
         long result = db.insert(TABLE_NAME, null, contentValues);
@@ -169,14 +176,19 @@ public class DatabaseController extends SQLiteOpenHelper{
 
             try {
                 return new Contact(
-                        cursorResultSet.getString(1),                       // Firstname
+                        cursorResultSet.getString(1),                               // Firstname
                         cursorResultSet.getString(3).length() <= 0
-                                ? null : cursorResultSet.getString(3).charAt(0),             // Middle Initial
-                        cursorResultSet.getString(2),                       // Lastname
-                        cursorResultSet.getString(4),                       // Phone number
-                        birthdate,                                             // Birthdate
-                        dateFormat.parse(cursorResultSet.getString(6)),      // First contact date
-                        Integer.parseInt(cursorResultSet.getString(0))
+                                ? null : cursorResultSet.getString(3).charAt(0),    // Middle Initial
+                        cursorResultSet.getString(2),                               // Lastname
+                        cursorResultSet.getString(4),                               // Phone number
+                        birthdate,                                                     // Birthdate
+                        dateFormat.parse(cursorResultSet.getString(6)),             // First contact date
+                        Integer.parseInt(cursorResultSet.getString(0)),             // Id
+                        cursorResultSet.getString(7),                               // Address Line One
+                        cursorResultSet.getString(8),                               // Address Line Two
+                        cursorResultSet.getString(9),                               // City
+                        cursorResultSet.getString(10),                              // State
+                        cursorResultSet.getString(11)                               // ZipCode
                 );
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -217,14 +229,19 @@ public class DatabaseController extends SQLiteOpenHelper{
 
             try {
                 listofContacts.add(new Contact(
-                        cursorResultSet.getString(1),                       // Firstname
+                        cursorResultSet.getString(1),                               // Firstname
                         cursorResultSet.getString(3).length() <= 0
-                                ? null : cursorResultSet.getString(3).charAt(0),             // Middle Initial
-                        cursorResultSet.getString(2),                       // Lastname
-                        cursorResultSet.getString(4),                       // Phone number
-                        birthdate,                                             // Birthdate
-                        dateFormat.parse(cursorResultSet.getString(6)),      // First contact date
-                        Integer.parseInt(cursorResultSet.getString(0))
+                                ? null : cursorResultSet.getString(3).charAt(0),    // Middle Initial
+                        cursorResultSet.getString(2),                               // Lastname
+                        cursorResultSet.getString(4),                               // Phone number
+                        birthdate,                                                     // Birthdate
+                        dateFormat.parse(cursorResultSet.getString(6)),             // First contact date
+                        Integer.parseInt(cursorResultSet.getString(0)),             // Id
+                        cursorResultSet.getString(7),                               // Address Line One
+                        cursorResultSet.getString(8),                               // Address Line Two
+                        cursorResultSet.getString(9),                               // City
+                        cursorResultSet.getString(10),                              // State
+                        cursorResultSet.getString(11)                               // ZipCode
                 ));
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -238,7 +255,9 @@ public class DatabaseController extends SQLiteOpenHelper{
 
     // UPDATE FUNCTION NEEDS THE ID PASSED AS WELL
     public boolean update(int id, String firstName, String lastName, String middleInitial,
-                          String phoneNumber, Object birthdate, Date firstContactDate){
+                            String phoneNumber, Object birthdate, Date firstContactDate,
+                            String addressLineOne, String addressLineTwo, String city,
+                            String state, String zipCode){
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
 
@@ -260,6 +279,13 @@ public class DatabaseController extends SQLiteOpenHelper{
             contentValues.put(COL_6, dateFormat.format(birthdate).toString());
         }
         contentValues.put(COL_7, dateFormat.format(firstContactDate).toString());
+
+        // PHASE 4 Additions
+        contentValues.put(COL_8, addressLineOne);
+        contentValues.put(COL_9, addressLineTwo);
+        contentValues.put(COL_10, city);
+        contentValues.put(COL_11, state);
+        contentValues.put(COL_12, zipCode);
 
         // call update function where id equals whatever
         db.update(TABLE_NAME, contentValues, "id = ?", new String[]{Integer.toString(id)});
@@ -304,7 +330,7 @@ public class DatabaseController extends SQLiteOpenHelper{
                     // If less than 6, not a valid line to parse
                     if (data.length < 6 ) continue;
                     if (data[0] == ""  || data[2] == "") continue;
-                    this.insertData(data[0], data[1], data[2],data[3],convertToDateObject(data[4]),convertToDateObject(data[5]));
+                    this.insertData(data[0], data[1], data[2],data[3],convertToDateObject(data[4]),convertToDateObject(data[5]), data[6], data[7], data[8], data[9], data[10]);
 
                 } catch(Exception e) {
                     // Could not load this line of data
@@ -338,7 +364,12 @@ public class DatabaseController extends SQLiteOpenHelper{
                 writer.write(c.getLastName() + "\t");
                 writer.write(c.getPhoneNumber() + "\t");
                 writer.write(sdf.format(c.getBirthday()) + "\t");
-                writer.write(sdf.format(c.getFirstMet()) + "\n");
+                writer.write(sdf.format(c.getFirstMet()) + "\t");
+                writer.write(c.getAddressLineOne() + "\t");
+                writer.write(c.getAddressLineTwo() + "\t");
+                writer.write(c.getCity() + "\t");
+                writer.write(c.getState() + "\t");
+                writer.write(c.getZipCode() + "\n");
             }
             writer.flush();
             writer.close();

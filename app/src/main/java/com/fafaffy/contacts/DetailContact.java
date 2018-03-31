@@ -100,9 +100,19 @@ public class DetailContact extends AppCompatActivity {
                 birthdateButton.setText(sdf.format(curContact.getBirthday()));
             }
             firstMetButton.setText(sdf.format(curContact.getFirstMet()));
-        } else {
+
+            // PHASE 4 Additions
+            addressLineOneEditText.setText(curContact.getAddressLineOne());
+            addressLineTwoEditText.setText(curContact.getAddressLineTwo());
+            cityEditText.setText(curContact.getCity());
+            stateEditText.setText(curContact.getState());
+            zipCodeEditText.setText(curContact.getZipCode());
+        }
+
+        else {
             firstMetButton.setText(sdf.format(Calendar.getInstance().getTime()));
         }
+
     }
 
     // Opens a fragment to choose birthdate or when you first met
@@ -164,14 +174,16 @@ public class DetailContact extends AppCompatActivity {
             if (selectedContactIndex != -1) {
                 // Insert contact data into SQLite DB, cast date objects to strings and mid initial to string
                 myDb.update(selectedContactIndex, contact.getFirstName(), contact.getLastName(), middleInitial,
-                        contact.getPhoneNumber(), contact.getBirthday(), contact.getFirstMet());
+                        contact.getPhoneNumber(), contact.getBirthday(), contact.getFirstMet(), contact.getAddressLineOne(),
+                        contact.getAddressLineTwo(), contact.getCity(), contact.getState(), contact.getZipCode());
             } else {
                 // If we're inserting a record
 
                 // Insert contact data into SQLite DB, cast date objects to strings and mid initial to string
                 myDb.insertData(contact.getFirstName(), contact.getLastName(), middleInitial,
-                        contact.getPhoneNumber(), contact.getBirthday(), contact.getFirstMet());
-
+                        contact.getPhoneNumber(), contact.getBirthday(), contact.getFirstMet(),
+                        contact.getAddressLineOne(), contact.getAddressLineTwo(), contact.getCity(),
+                        contact.getState(), contact.getZipCode());
             }
 
             //display file saved confirmation message
@@ -197,6 +209,14 @@ public class DetailContact extends AppCompatActivity {
         if (!birthdateButton.getText().equals("N/A")) {
             c.setBirthday(convertToDateObject(birthdateButton.getText()));
         }
+
+        // Phase 4 Updates
+        c.setAddressLineOne(addressLineOneEditText.getText().toString());
+        c.setAddressLineTwo(addressLineTwoEditText.getText().toString());
+        c.setCity(cityEditText.getText().toString());
+        c.setState(stateEditText.getText().toString());
+        c.setZipCode(zipCodeEditText.getText().toString());
+
         return c;
     }
 
