@@ -15,6 +15,9 @@ import com.fafaffy.contacts.Controllers.DatabaseController;
 import com.fafaffy.contacts.Fragments.DatePickerFragment;
 import com.fafaffy.contacts.Models.Contact;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -231,6 +234,47 @@ public class DetailContact extends AppCompatActivity {
             e.printStackTrace();
         }
         return date;
+    }
+
+
+
+
+    //PHASE 4 MAP FUNCTIONS ----------------------------------
+
+    //PHASE 4 - on 'map address' button, start map activity
+    public void launchMapAddressActivity(View view){
+
+        // 1 get the address from form
+        String contactAddress = getAddress();
+
+        // 2 call the Google API to get a JSON object returned
+        parseAddress(contactAddress);
+
+        // 3 parse JSON to get lat and longitude
+
+
+        // 4 Create intent and PASS LATITUDE AND LONGITUDE to map activity
+        Intent mapAddressIntent = new Intent(this,
+                MapsActivity.class);
+        //mapAddressIntent.putExtra(contactAddress, contactAddress)
+        startActivity(mapAddressIntent);
+    }
+
+    public String getAddress(){
+        return "http://maps.googleapis.com/maps/api/geocode/json?address=" +
+                addressLineOneEditText.getText().toString().replace(' ', '+') + ",+" +
+                cityEditText.getText().toString() + ",+" +
+                stateEditText.getText().toString() + "&sensor=true_or_false";
+    }
+
+
+    public String parseAddress(String inputAddress){
+        try {
+            JSONObject JSONaddress = (new JSONObject(inputAddress).getJSONObject("results"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

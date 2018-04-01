@@ -10,5 +10,6 @@
     <string name="saveButton">Save</string>
     <string name="deleteButton">Delete</string>
     <string name="firstContactDate">Date of First Contact</string>
+    <string name="title_activity_maps">Map</string>
 
 </resources>
