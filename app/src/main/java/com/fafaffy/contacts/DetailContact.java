@@ -287,7 +287,6 @@ public class DetailContact extends AppCompatActivity {
     // ASYNC TASK TO DOWNLOAD THE JSON DATA FROM GOOGLE-----------------------------------
     private class DownloadJSONFile extends AsyncTask< String, Void, JSONObject > { //3 things are: Parameter, Progress, Result
 
-//        List<String> fetchedJsonString;
         JSONObject jsonReturnObject = new JSONObject();
 
         // Nothing needed
@@ -297,17 +296,7 @@ public class DetailContact extends AppCompatActivity {
 
         @Override
         protected JSONObject doInBackground(String... urlString) {
-            //FILL OUT URL CODE AND GET SHIT
-//            try {
-//                // CALL GETJSONFILE FUNCTION WITH URLSTRING
-//                fetchedJsonString = getJsonFile(urlString[0]);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            return fetchedJsonString;
-
-
-            // NEW STUFF
+            //FILL OUT URL CODE AND GET DATA
             try {
                 jsonReturnObject = readJsonFromUrl(urlString[0]);
             } catch (IOException e) {
@@ -315,7 +304,6 @@ public class DetailContact extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             return jsonReturnObject;
         }
 
@@ -337,6 +325,7 @@ public class DetailContact extends AppCompatActivity {
             startActivity(mapAddressIntent);
         }
     }
+
 
     /////////////////////////////////////////////////////////
     // Json Object read functions
@@ -405,31 +394,24 @@ public class DetailContact extends AppCompatActivity {
 
     public Double[] parseAddress(JSONObject input){
         Double[] latLongValues = {0.0,0.0};
-        String lat = "";
-        String lng = "";
 
-        // Pull out the latitude and longitude of the json object and put in double array
-
-        // Getting JSON Array node
+        // Get JSON Array node and funnel down to the one we need for lat and long - located in 'location' node
         try {
             JSONArray results = input.getJSONArray("results");
-
             JSONObject resultsJSONObject = results.getJSONObject(0);
             JSONObject geometry = resultsJSONObject.getJSONObject("geometry");
             JSONObject location = geometry.getJSONObject("location");
 
-            lat = location.getString("lat");
-            lng = location.getString("lng");
+            // Save lat and long into double array
+            latLongValues[0] = Double.parseDouble(location.getString("lat"));
+            latLongValues[1] = Double.parseDouble(location.getString("lng"));
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-
+        // Return array with lat and long saved
         return latLongValues;
     }
-
-
-
 
 }
