@@ -345,6 +345,8 @@ public class DatabaseController extends SQLiteOpenHelper{
     }
 
     public void saveContactsToFile(String filepath) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
+
         try {
             if (ContextCompat.checkSelfPermission(curContext, Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED) {
@@ -363,7 +365,13 @@ public class DatabaseController extends SQLiteOpenHelper{
                 writer.write(c.getMiddleInitial() + "\t");
                 writer.write(c.getLastName() + "\t");
                 writer.write(c.getPhoneNumber() + "\t");
-                writer.write(sdf.format(c.getBirthday()) + "\t");
+                if (c.getBirthday() == null) {
+
+                    writer.write("N/A \t");
+                } else {
+                    writer.write(dateFormat.format(c.getBirthday()) + "\t");
+                }
+//                writer.write(sdf.format(c.getBirthday()) + "\t");
                 writer.write(sdf.format(c.getFirstMet()) + "\t");
                 writer.write(c.getAddressLineOne() + "\t");
                 writer.write(c.getAddressLineTwo() + "\t");

@@ -3,8 +3,10 @@ package com.fafaffy.contacts;
 /* Created by Alex Casasola & Brian Gardner */
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -18,6 +20,18 @@ import com.fafaffy.contacts.Models.Contact;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -239,7 +253,7 @@ public class DetailContact extends AppCompatActivity {
 
 
 
-    //PHASE 4 MAP FUNCTIONS ----------------------------------
+    //PHASE 4 MAP FUNCTIONS -----------------------------------------------------
 
     //PHASE 4 - on 'map address' button, start map activity
     public void launchMapAddressActivity(View view){
@@ -247,34 +261,123 @@ public class DetailContact extends AppCompatActivity {
         // 1 get the address from form
         String contactAddress = getAddress();
 
-        // 2 call the Google API to get a JSON object returned
-        parseAddress(contactAddress);
+        // 2 call the Google API website to get the JSON object from the contact address
+//          getJsonFile(contactAddress);
+        new DownloadJSONFile().execute(contactAddress);
 
         // 3 parse JSON to get lat and longitude
-
+        //parseAddress(contactAddress);
 
         // 4 Create intent and PASS LATITUDE AND LONGITUDE to map activity
-        Intent mapAddressIntent = new Intent(this,
-                MapsActivity.class);
-        //mapAddressIntent.putExtra(contactAddress, contactAddress)
-        startActivity(mapAddressIntent);
+        // Moved this to the POST execute function...where it belongs
+
     }
 
     public String getAddress(){
-        return "http://maps.googleapis.com/maps/api/geocode/json?address=" +
+        return "https://maps.googleapis.com/maps/api/geocode/json?address=" +
                 addressLineOneEditText.getText().toString().replace(' ', '+') + ",+" +
                 cityEditText.getText().toString() + ",+" +
-                stateEditText.getText().toString() + "&sensor=true_or_false";
+                stateEditText.getText().toString() + "&key=AIzaSyAaNqdT1pOfE57-E-rfvQXWsSx4QVz7stw";
     }
+
+
+
+    // ASYNC TASK TO DOWNLOAD THE JSON DATA FROM GOOGLE-----------------------------------
+    private class DownloadJSONFile extends AsyncTask< String, Void, List<String> > { //3 things are: Parameter, Progress, Result
+
+        List<String> fetchedJsonFile;
+
+        // Nothing needed
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected List<String> doInBackground(String... urlString) {
+            //FILL OUT URL CODE AND GET SHIT
+            try {
+                // CALL GETJSONFILE FUNCTION WITH URLSTRING
+                fetchedJsonFile = getJsonFile(urlString[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return fetchedJsonFile;
+        }
+
+        @Override
+        protected void onPostExecute(List<String> fetchedDataList) {
+            Log.v("onPostExecute", "startingMapActivity");
+            Intent mapAddressIntent = new Intent(getApplicationContext(), MapsActivity.class);
+            //mapAddressIntent.putExtra(contactAddress, contactAddress)
+            startActivity(mapAddressIntent);
+        }
+    }
+
+
+    public List<String> getJsonFile(String stringInput) throws IOException{
+
+        List<String> jsonObjectData = new ArrayList<>();
+
+        // CREATE URL from user symbol
+        URL url = null;
+        try {
+            url = new URL(stringInput);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        // Attempt to open connection and read data
+        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+
+        try{
+            InputStream responseInputStream = connection.getInputStream();
+            InputStreamReader isr = new InputStreamReader(responseInputStream, "UTF-8");
+
+            // If there is an error, report it
+            if(connection.getResponseCode() != 200){
+                throw new IOException(connection.getResponseMessage() +": with " + stringInput);
+            }
+            // If no error, continue and read in data
+            else {
+                BufferedReader reader = new BufferedReader(isr);
+
+                for (String line = null; (line = reader.readLine()) != null;) {
+                        jsonObjectData.add(line);
+                }
+                return jsonObjectData;
+            }
+        }finally {
+            connection.disconnect();
+        }
+    }
+
+
 
 
     public String parseAddress(String inputAddress){
+        Double latitude;
+        Double longitude;
         try {
             JSONObject JSONaddress = (new JSONObject(inputAddress).getJSONObject("results"));
+            latitude = JSONaddress.getDouble("latitude");
+            longitude = JSONaddress.getDouble("longitude");
+
+//            String lat =loc.getString(TAG_LAT);
+//
+//            String lng = loc.getString(TAG_LNG);
+//
+//            lattv.setText(lat);
+//            lngtv.setText(lng);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
         return null;
     }
+
+
+
 
 }

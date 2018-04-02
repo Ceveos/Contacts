@@ -46,6 +46,11 @@ public class FileController extends Activity {
             outputWriter.write(contact.getFirstName() + ",");
             outputWriter.write(contact.getMiddleInitial() + ",");
             outputWriter.write(contact.getLastName() + ",");
+//            outputWriter.write(contact.getAddressLineOne() + ",");
+//            outputWriter.write(contact.getAddressLineTwo() + ",");
+//            outputWriter.write(contact.getCity() + ",");
+//            outputWriter.write(contact.getState() + ",");
+//            outputWriter.write(contact.getZipCode() + ",");
             outputWriter.write(contact.getPhoneNumber() + ",");
             if (contact.getBirthday() == null) {
 
@@ -76,6 +81,12 @@ public class FileController extends Activity {
                 outputWriter.write(contact.getMiddleInitial() + ",");
                 outputWriter.write(contact.getLastName() + ",");
                 outputWriter.write(contact.getPhoneNumber() + ",");
+//                outputWriter.write(contact.getAddressLineOne() + ",");
+//                outputWriter.write(contact.getAddressLineTwo() + ",");
+//                outputWriter.write(contact.getCity() + ",");
+//                outputWriter.write(contact.getState() + ",");
+//                outputWriter.write(contact.getZipCode() + ",");
+//                outputWriter.write(contact.getPhoneNumber() + ",");
 
                 if (contact.getBirthday() == null) {
                     outputWriter.write(dateFormat.format("N/A") + ",");
@@ -86,11 +97,11 @@ public class FileController extends Activity {
                 outputWriter.write(dateFormat.format(contact.getFirstMet()) + ",");
 
                 // Phase 4 additions
-                outputWriter.write(contact.getAddressLineOne() + ",");
-                outputWriter.write(contact.getAddressLineTwo() + ",");
-                outputWriter.write(contact.getCity() + ",");
-                outputWriter.write(contact.getState() + ",");
-                outputWriter.write(contact.getZipCode() + "\n");
+//                outputWriter.write(contact.getAddressLineOne() + ",");
+//                outputWriter.write(contact.getAddressLineTwo() + ",");
+//                outputWriter.write(contact.getCity() + ",");
+//                outputWriter.write(contact.getState() + ",");
+//                outputWriter.write(contact.getZipCode() + "\n");
             }
 
             outputWriter.close();
