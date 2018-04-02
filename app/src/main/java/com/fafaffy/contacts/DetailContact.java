@@ -17,6 +17,7 @@ import com.fafaffy.contacts.Controllers.DatabaseController;
 import com.fafaffy.contacts.Fragments.DatePickerFragment;
 import com.fafaffy.contacts.Models.Contact;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,10 +29,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -262,7 +265,6 @@ public class DetailContact extends AppCompatActivity {
         String contactAddress = getAddress();
 
         // 2 call the Google API website to get the JSON object from the contact address
-//          getJsonFile(contactAddress);
         new DownloadJSONFile().execute(contactAddress);
 
         // 3 parse JSON to get lat and longitude
@@ -283,9 +285,10 @@ public class DetailContact extends AppCompatActivity {
 
 
     // ASYNC TASK TO DOWNLOAD THE JSON DATA FROM GOOGLE-----------------------------------
-    private class DownloadJSONFile extends AsyncTask< String, Void, List<String> > { //3 things are: Parameter, Progress, Result
+    private class DownloadJSONFile extends AsyncTask< String, Void, JSONObject > { //3 things are: Parameter, Progress, Result
 
-        List<String> fetchedJsonFile;
+//        List<String> fetchedJsonString;
+        JSONObject jsonReturnObject = new JSONObject();
 
         // Nothing needed
         protected void onPreExecute() {
@@ -293,26 +296,71 @@ public class DetailContact extends AppCompatActivity {
         }
 
         @Override
-        protected List<String> doInBackground(String... urlString) {
+        protected JSONObject doInBackground(String... urlString) {
             //FILL OUT URL CODE AND GET SHIT
+//            try {
+//                // CALL GETJSONFILE FUNCTION WITH URLSTRING
+//                fetchedJsonString = getJsonFile(urlString[0]);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            return fetchedJsonString;
+
+
+            // NEW STUFF
             try {
-                // CALL GETJSONFILE FUNCTION WITH URLSTRING
-                fetchedJsonFile = getJsonFile(urlString[0]);
+                jsonReturnObject = readJsonFromUrl(urlString[0]);
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-            return fetchedJsonFile;
+            return jsonReturnObject;
         }
 
         @Override
-        protected void onPostExecute(List<String> fetchedDataList) {
-            Log.v("onPostExecute", "startingMapActivity");
+        protected void onPostExecute(JSONObject fetchedDataList) {
+            Log.v("onPostExecute", "");
+
+            // Create Double array to hold 2 values - latitude and longitude
+            Double[] latLongValues = {};
+
+            //Call parseAddress func and get those two double values, assign them into array
+            latLongValues = parseAddress(fetchedDataList);
+
+
+            // Now pass those two values from Double array as intents to the maps activity class
+
             Intent mapAddressIntent = new Intent(getApplicationContext(), MapsActivity.class);
             //mapAddressIntent.putExtra(contactAddress, contactAddress)
             startActivity(mapAddressIntent);
         }
     }
+
+    /////////////////////////////////////////////////////////
+    // Json Object read functions
+    private static String readAll(Reader rd) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        int cp;
+        while ((cp = rd.read()) != -1) {
+            sb.append((char) cp);
+        }
+        return sb.toString();
+    }
+    public static JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
+        InputStream is = new URL(url).openStream();
+        try {
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            String jsonText = readAll(rd);
+            JSONObject json = new JSONObject(jsonText);
+            return json;
+        } finally {
+            is.close();
+        }
+    }
+    ///////////////////////////////////////////////////////
+
 
 
     public List<String> getJsonFile(String stringInput) throws IOException{
@@ -355,26 +403,30 @@ public class DetailContact extends AppCompatActivity {
 
 
 
-    public String parseAddress(String inputAddress){
-        Double latitude;
-        Double longitude;
-        try {
-            JSONObject JSONaddress = (new JSONObject(inputAddress).getJSONObject("results"));
-            latitude = JSONaddress.getDouble("latitude");
-            longitude = JSONaddress.getDouble("longitude");
+    public Double[] parseAddress(JSONObject input){
+        Double[] latLongValues = {0.0,0.0};
+        String lat = "";
+        String lng = "";
 
-//            String lat =loc.getString(TAG_LAT);
-//
-//            String lng = loc.getString(TAG_LNG);
-//
-//            lattv.setText(lat);
-//            lngtv.setText(lng);
+        // Pull out the latitude and longitude of the json object and put in double array
+
+        // Getting JSON Array node
+        try {
+            JSONArray results = input.getJSONArray("results");
+
+            JSONObject resultsJSONObject = results.getJSONObject(0);
+            JSONObject geometry = resultsJSONObject.getJSONObject("geometry");
+            JSONObject location = geometry.getJSONObject("location");
+
+            lat = location.getString("lat");
+            lng = location.getString("lng");
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        return null;
+
+        return latLongValues;
     }
 
 
