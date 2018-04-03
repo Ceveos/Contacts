@@ -1,5 +1,8 @@
 package com.fafaffy.contacts;
 
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -11,6 +14,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+// Created by Brian on Apr 2 18
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -56,9 +60,39 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Add a marker using the passed in latitude and longitude and move the camera - and ZOOM it
         LatLng contactLocation = new LatLng(latitude, longitude);
         mMap.addMarker(new MarkerOptions().position(contactLocation).title("Your Contact Lives Here"));
+
+        //Adjusted zoom amount
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(contactLocation,17));
 
+    }
 
+
+    //Get current location to calculate distance
+    // Created by Brian
+    public void getCurrentLocation(){
+        LocationManager locationManager = (LocationManager)getSystemService(getApplicationContext().LOCATION_SERVICE);
+
+        final LocationListener mLocationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(final Location location) {
+
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+
+            }
+        };
 
 
     }

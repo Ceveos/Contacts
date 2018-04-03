@@ -346,43 +346,43 @@ public class DetailContact extends AppCompatActivity {
     /////////////////////////////////////////////////////////////////////////////////
 
 
-    //Created by Brian
-    public List<String> getJsonFile(String stringInput) throws IOException{
-
-        List<String> jsonObjectData = new ArrayList<>();
-
-        // CREATE URL from user symbol
-        URL url = null;
-        try {
-            url = new URL(stringInput);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        // Attempt to open connection and read data
-        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-
-        try{
-            InputStream responseInputStream = connection.getInputStream();
-            InputStreamReader isr = new InputStreamReader(responseInputStream, "UTF-8");
-
-            // If there is an error, report it
-            if(connection.getResponseCode() != 200){
-                throw new IOException(connection.getResponseMessage() +": with " + stringInput);
-            }
-            // If no error, continue and read in data
-            else {
-                BufferedReader reader = new BufferedReader(isr);
-
-                for (String line = null; (line = reader.readLine()) != null;) {
-                        jsonObjectData.add(line);
-                }
-                return jsonObjectData;
-            }
-        }finally {
-            connection.disconnect();
-        }
-    }
+//    //Created by Brian
+//    public List<String> getJsonFile(String stringInput) throws IOException{
+//
+//        List<String> jsonObjectData = new ArrayList<>();
+//
+//        // CREATE URL from user symbol
+//        URL url = null;
+//        try {
+//            url = new URL(stringInput);
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        // Attempt to open connection and read data
+//        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+//
+//        try{
+//            InputStream responseInputStream = connection.getInputStream();
+//            InputStreamReader isr = new InputStreamReader(responseInputStream, "UTF-8");
+//
+//            // If there is an error, report it
+//            if(connection.getResponseCode() != 200){
+//                throw new IOException(connection.getResponseMessage() +": with " + stringInput);
+//            }
+//            // If no error, continue and read in data
+//            else {
+//                BufferedReader reader = new BufferedReader(isr);
+//
+//                for (String line = null; (line = reader.readLine()) != null;) {
+//                        jsonObjectData.add(line);
+//                }
+//                return jsonObjectData;
+//            }
+//        }finally {
+//            connection.disconnect();
+//        }
+//    }
 
     //Created by Brian
     public Double[] parseAddress(JSONObject input){
