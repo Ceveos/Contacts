@@ -272,7 +272,7 @@ public class DetailContact extends AppCompatActivity {
     public String getAddress(){
         return "https://maps.googleapis.com/maps/api/geocode/json?address=" +
                 addressLineOneEditText.getText().toString().replace(' ', '+') + ",+" +
-                cityEditText.getText().toString() + ",+" +
+                cityEditText.getText().toString().replace(' ', '+') + ",+" +
                 stateEditText.getText().toString() + "&key=AIzaSyAaNqdT1pOfE57-E-rfvQXWsSx4QVz7stw";
     }
 

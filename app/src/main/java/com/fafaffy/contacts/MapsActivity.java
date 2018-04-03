@@ -13,19 +13,28 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private double latitude = 0.0;
+    private double longitude = 0.0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        // Get passed in Lat long values
+        Bundle bundle = getIntent().getExtras();
+        latitude = bundle.getDouble("latitude");
+        longitude =  bundle.getDouble("longitude");
+
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
 
         mapFragment.getMapAsync(this);
-        Bundle bundle = getIntent().getExtras();
-        double lat = bundle.getDouble("latitude");
-        double lng = bundle.getDouble("longitude");
+
+
 
     }
 
@@ -43,9 +52,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        // Add a marker using the passed in latitude and longitude and move the camera
+        LatLng contactLocation = new LatLng(latitude, longitude);
+        mMap.addMarker(new MarkerOptions().position(contactLocation).title("Your Contact Lives Here"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(contactLocation));
     }
+
+
+
+
+
 }
