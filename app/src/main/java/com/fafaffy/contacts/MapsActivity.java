@@ -3,6 +3,7 @@ package com.fafaffy.contacts;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -52,10 +53,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker using the passed in latitude and longitude and move the camera
+        // Add a marker using the passed in latitude and longitude and move the camera - and ZOOM it
         LatLng contactLocation = new LatLng(latitude, longitude);
         mMap.addMarker(new MarkerOptions().position(contactLocation).title("Your Contact Lives Here"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(contactLocation));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(contactLocation,17));
+
+
+
+
     }
 
 

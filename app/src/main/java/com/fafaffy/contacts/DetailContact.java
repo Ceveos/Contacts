@@ -259,6 +259,7 @@ public class DetailContact extends AppCompatActivity {
     //PHASE 4 MAP FUNCTIONS -----------------------------------------------------
 
     //PHASE 4 - on 'map address' button, start map activity
+    //Created by Brian
     public void launchMapAddressActivity(View view){
 
         // 1 get the address from form
@@ -269,6 +270,7 @@ public class DetailContact extends AppCompatActivity {
 
     }
 
+    //Created by Brian
     public String getAddress(){
         return "https://maps.googleapis.com/maps/api/geocode/json?address=" +
                 addressLineOneEditText.getText().toString().replace(' ', '+') + ",+" +
@@ -277,6 +279,7 @@ public class DetailContact extends AppCompatActivity {
     }
 
     // ASYNC TASK TO DOWNLOAD THE JSON DATA FROM GOOGLE-----------------------------------
+    //Created by Brian
     private class DownloadJSONFile extends AsyncTask< String, Void, JSONObject > { //3 things are: Parameter, Progress, Result
 
         JSONObject jsonReturnObject = new JSONObject();
@@ -320,6 +323,7 @@ public class DetailContact extends AppCompatActivity {
 
     ///////////////////////////////////////////////////////////////////////////////////
     // Json Object read functions
+    // Created by Brian
     private static String readAll(Reader rd) throws IOException {
         StringBuilder sb = new StringBuilder();
         int cp;
@@ -342,7 +346,7 @@ public class DetailContact extends AppCompatActivity {
     /////////////////////////////////////////////////////////////////////////////////
 
 
-
+    //Created by Brian
     public List<String> getJsonFile(String stringInput) throws IOException{
 
         List<String> jsonObjectData = new ArrayList<>();
@@ -380,9 +384,7 @@ public class DetailContact extends AppCompatActivity {
         }
     }
 
-
-
-
+    //Created by Brian
     public Double[] parseAddress(JSONObject input){
         Double[] latLongValues = {0.0,0.0};
 
