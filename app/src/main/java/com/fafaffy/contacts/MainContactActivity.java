@@ -186,7 +186,6 @@ public class MainContactActivity extends AppCompatActivity{
             }
         }
 
-
         // Call get all data func from db instance
         mData = myDb.getAllData();
 

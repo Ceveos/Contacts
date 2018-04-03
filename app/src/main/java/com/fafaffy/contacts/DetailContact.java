@@ -2,10 +2,11 @@ package com.fafaffy.contacts;
 
 /* Created by Alex Casasola & Brian Gardner */
 
-import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -13,22 +14,31 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.fafaffy.contacts.Controllers.DatabaseController;
-import com.fafaffy.contacts.Controllers.FileController;
 import com.fafaffy.contacts.Fragments.DatePickerFragment;
 import com.fafaffy.contacts.Models.Contact;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.lang.reflect.Array;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.nio.charset.Charset;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 
 // This activity allows a user to enter a contact's information
@@ -44,6 +54,15 @@ public class DetailContact extends AppCompatActivity {
     private EditText phoneNumberEditText;
     private Button birthdateButton;
     private Button firstMetButton;
+
+    // PHASE 4 Form Field Variables
+    private EditText addressLineOneEditText;
+    private EditText addressLineTwoEditText;
+    private EditText cityEditText;
+    private EditText stateEditText;
+    private EditText zipCodeEditText;
+
+
     private List<Contact> listOfContacts;
     private int selectedContactIndex = -1;
     private DatabaseController controller;
@@ -63,6 +82,16 @@ public class DetailContact extends AppCompatActivity {
         phoneNumberEditText     = (EditText)findViewById(R.id.phoneNumberTextBox);
         birthdateButton         = (Button)findViewById(R.id.birthdate);
         firstMetButton          = (Button)findViewById(R.id.firstContactDateButton);
+
+        // PHASE 4 Form Field Additions
+        addressLineOneEditText = (EditText)findViewById(R.id.AddressLine1TextBox);
+        addressLineTwoEditText = (EditText)findViewById(R.id.AddressLine2TextBox);
+        cityEditText           = (EditText)findViewById(R.id.CityTextBox);
+        stateEditText          = (EditText)findViewById(R.id.StateTextBox);
+        zipCodeEditText        = (EditText)findViewById(R.id.ZipCodeTextBox);
+
+
+
         controller = new DatabaseController(getApplicationContext());
 
         // See if we have intents
@@ -91,9 +120,19 @@ public class DetailContact extends AppCompatActivity {
                 birthdateButton.setText(sdf.format(curContact.getBirthday()));
             }
             firstMetButton.setText(sdf.format(curContact.getFirstMet()));
-        } else {
+
+            // PHASE 4 Additions
+            addressLineOneEditText.setText(curContact.getAddressLineOne());
+            addressLineTwoEditText.setText(curContact.getAddressLineTwo());
+            cityEditText.setText(curContact.getCity());
+            stateEditText.setText(curContact.getState());
+            zipCodeEditText.setText(curContact.getZipCode());
+        }
+
+        else {
             firstMetButton.setText(sdf.format(Calendar.getInstance().getTime()));
         }
+
     }
 
     // Opens a fragment to choose birthdate or when you first met
@@ -155,14 +194,16 @@ public class DetailContact extends AppCompatActivity {
             if (selectedContactIndex != -1) {
                 // Insert contact data into SQLite DB, cast date objects to strings and mid initial to string
                 myDb.update(selectedContactIndex, contact.getFirstName(), contact.getLastName(), middleInitial,
-                        contact.getPhoneNumber(), contact.getBirthday(), contact.getFirstMet());
+                        contact.getPhoneNumber(), contact.getBirthday(), contact.getFirstMet(), contact.getAddressLineOne(),
+                        contact.getAddressLineTwo(), contact.getCity(), contact.getState(), contact.getZipCode());
             } else {
                 // If we're inserting a record
 
                 // Insert contact data into SQLite DB, cast date objects to strings and mid initial to string
                 myDb.insertData(contact.getFirstName(), contact.getLastName(), middleInitial,
-                        contact.getPhoneNumber(), contact.getBirthday(), contact.getFirstMet());
-
+                        contact.getPhoneNumber(), contact.getBirthday(), contact.getFirstMet(),
+                        contact.getAddressLineOne(), contact.getAddressLineTwo(), contact.getCity(),
+                        contact.getState(), contact.getZipCode());
             }
 
             //display file saved confirmation message
@@ -188,6 +229,14 @@ public class DetailContact extends AppCompatActivity {
         if (!birthdateButton.getText().equals("N/A")) {
             c.setBirthday(convertToDateObject(birthdateButton.getText()));
         }
+
+        // Phase 4 Updates
+        c.setAddressLineOne(addressLineOneEditText.getText().toString());
+        c.setAddressLineTwo(addressLineTwoEditText.getText().toString());
+        c.setCity(cityEditText.getText().toString());
+        c.setState(stateEditText.getText().toString());
+        c.setZipCode(zipCodeEditText.getText().toString());
+
         return c;
     }
 
@@ -202,6 +251,160 @@ public class DetailContact extends AppCompatActivity {
             e.printStackTrace();
         }
         return date;
+    }
+
+
+
+
+    //PHASE 4 MAP FUNCTIONS -----------------------------------------------------
+
+    //PHASE 4 - on 'map address' button, start map activity
+    //Created by Brian
+    public void launchMapAddressActivity(View view){
+
+        // 1 get the address from form
+        String contactAddress = getAddress();
+
+        // 2 call the Google API website to get the JSON object from the contact address
+        new DownloadJSONFile().execute(contactAddress);
+
+    }
+
+    //Created by Brian
+    public String getAddress(){
+        return "https://maps.googleapis.com/maps/api/geocode/json?address=" +
+                addressLineOneEditText.getText().toString().replace(' ', '+') + ",+" +
+                cityEditText.getText().toString().replace(' ', '+') + ",+" +
+                stateEditText.getText().toString() + "&key=AIzaSyAaNqdT1pOfE57-E-rfvQXWsSx4QVz7stw";
+    }
+
+    // ASYNC TASK TO DOWNLOAD THE JSON DATA FROM GOOGLE-----------------------------------
+    //Created by Brian
+    private class DownloadJSONFile extends AsyncTask< String, Void, JSONObject > { //3 things are: Parameter, Progress, Result
+
+        JSONObject jsonReturnObject = new JSONObject();
+
+        // Nothing needed
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected JSONObject doInBackground(String... urlString) {
+            //FILL OUT URL CODE AND GET DATA
+            try {
+                jsonReturnObject = readJsonFromUrl(urlString[0]);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return jsonReturnObject;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject fetchedDataList) {
+            Log.v("onPostExecute", "");
+
+            // Create Double array to hold 2 values - latitude and longitude
+            Double[] latLongValues = {};
+
+            //Call parseAddress func and get those two double values, assign them into array
+            latLongValues = parseAddress(fetchedDataList);
+
+            // Now pass those two values from Double array as intents to the maps activity class
+            Intent mapAddressIntent = new Intent(getApplicationContext(), MapsActivity.class);
+            mapAddressIntent.putExtra("latitude", latLongValues[0]);
+            mapAddressIntent.putExtra("longitude", latLongValues[1]);
+            startActivity(mapAddressIntent);
+        }
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    // Json Object read functions
+    // Created by Brian
+    private static String readAll(Reader rd) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        int cp;
+        while ((cp = rd.read()) != -1) {
+            sb.append((char) cp);
+        }
+        return sb.toString();
+    }
+    public static JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
+        InputStream is = new URL(url).openStream();
+        try {
+            BufferedReader rd = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+            String jsonText = readAll(rd);
+            JSONObject json = new JSONObject(jsonText);
+            return json;
+        } finally {
+            is.close();
+        }
+    }
+    /////////////////////////////////////////////////////////////////////////////////
+
+
+//    //Created by Brian
+//    public List<String> getJsonFile(String stringInput) throws IOException{
+//
+//        List<String> jsonObjectData = new ArrayList<>();
+//
+//        // CREATE URL from user symbol
+//        URL url = null;
+//        try {
+//            url = new URL(stringInput);
+//        } catch (MalformedURLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        // Attempt to open connection and read data
+//        HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+//
+//        try{
+//            InputStream responseInputStream = connection.getInputStream();
+//            InputStreamReader isr = new InputStreamReader(responseInputStream, "UTF-8");
+//
+//            // If there is an error, report it
+//            if(connection.getResponseCode() != 200){
+//                throw new IOException(connection.getResponseMessage() +": with " + stringInput);
+//            }
+//            // If no error, continue and read in data
+//            else {
+//                BufferedReader reader = new BufferedReader(isr);
+//
+//                for (String line = null; (line = reader.readLine()) != null;) {
+//                        jsonObjectData.add(line);
+//                }
+//                return jsonObjectData;
+//            }
+//        }finally {
+//            connection.disconnect();
+//        }
+//    }
+
+    //Created by Brian
+    public Double[] parseAddress(JSONObject input){
+        Double[] latLongValues = {0.0,0.0};
+
+        // Get JSON Array node and funnel down to the one we need for lat and long - located in 'location' node
+        try {
+            JSONArray results = input.getJSONArray("results");
+            JSONObject resultsJSONObject = results.getJSONObject(0);
+            JSONObject geometry = resultsJSONObject.getJSONObject("geometry");
+            JSONObject location = geometry.getJSONObject("location");
+
+            // Save lat and long into double array
+            latLongValues[0] = Double.parseDouble(location.getString("lat"));
+            latLongValues[1] = Double.parseDouble(location.getString("lng"));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Return array with lat and long saved
+        return latLongValues;
     }
 
 }

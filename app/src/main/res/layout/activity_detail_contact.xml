@@ -9,12 +9,13 @@
 
     <Button
         android:id="@+id/birthdate"
-        android:layout_width="wrap_content"
-        android:layout_height="68dp"
+        android:layout_width="161dp"
+        android:layout_height="45dp"
         android:layout_marginEnd="15dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="38dp"
         android:calendarViewShown="false"
+        android:fontFamily="monospace"
         android:onClick="showDatePickerDialog"
         android:text="N/A"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,9 +24,8 @@
 
     <EditText
         android:id="@+id/lastNameTextBox"
-        android:layout_width="wrap_content"
+        android:layout_width="243dp"
         android:layout_height="46dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:defaultFocusHighlightEnabled="false"
@@ -34,31 +34,29 @@
         android:gravity="center_horizontal"
         android:hint="Last Name"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/firstNameTextBox" />
 
     <EditText
         android:id="@+id/middleInitialTextBox"
-        android:layout_width="wrap_content"
+        android:layout_width="128dp"
         android:layout_height="46dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:ems="10"
         android:fontFamily="monospace"
         android:gravity="center_horizontal"
-        android:hint="Middle Initial"
+        android:hint="Mid Initial"
         android:inputType="textPersonName"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lastNameTextBox" />
+        app:layout_constraintStart_toEndOf="@+id/firstNameTextBox"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/firstNameTextBox"
-        android:layout_width="wrap_content"
+        android:layout_width="243dp"
         android:layout_height="46dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:defaultFocusHighlightEnabled="false"
@@ -68,32 +66,29 @@
         android:gravity="center_horizontal"
         android:hint="First Name"
         android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/phoneNumberTextBox"
-        android:layout_width="wrap_content"
+        android:layout_width="178dp"
         android:layout_height="46dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:ems="10"
         android:fontFamily="monospace"
         android:gravity="center_horizontal"
         android:hint="Phone Number"
         android:inputType="phone"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/middleInitialTextBox" />
+        app:layout_constraintTop_toBottomOf="@+id/CityTextBox" />
 
     <TextView
         android:id="@+id/birthdateTextView"
         android:layout_width="103dp"
         android:layout_height="25dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="48dp"
         android:fontFamily="monospace"
         android:gravity="center_vertical|center_horizontal"
         android:hint="@string/birthdate"
@@ -104,22 +99,22 @@
 
     <Button
         android:id="@+id/saveButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="123dp"
+        android:layout_height="61dp"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="32dp"
         android:backgroundTint="@android:color/background_dark"
         android:hint="@string/deleteButton"
-        android:text="@string/deleteButton"
         android:onClick="onDeleteClicked"
+        android:text="@string/deleteButton"
         android:textColor="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/deleteButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="123dp"
+        android:layout_height="61dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="32dp"
         android:backgroundTint="@android:color/background_dark"
@@ -134,8 +129,7 @@
         android:id="@+id/firstContactDateTextView"
         android:layout_width="115dp"
         android:layout_height="67dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="50dp"
         android:fontFamily="monospace"
         android:gravity="center_vertical|center_horizontal"
         android:hint="@string/firstContactDate"
@@ -146,8 +140,8 @@
 
     <Button
         android:id="@+id/firstContactDateButton"
-        android:layout_width="wrap_content"
-        android:layout_height="47dp"
+        android:layout_width="161dp"
+        android:layout_height="45dp"
         android:layout_marginEnd="28dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -158,5 +152,91 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/firstContactDateTextView"
         app:layout_constraintTop_toBottomOf="@+id/birthdate" />
+
+    <EditText
+        android:id="@+id/AddressLine1TextBox"
+        android:layout_width="218dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:fontFamily="monospace"
+        android:gravity="center_horizontal"
+        android:hint="Address Line 1"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lastNameTextBox" />
+
+    <EditText
+        android:id="@+id/AddressLine2TextBox"
+        android:layout_width="147dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:fontFamily="monospace"
+        android:gravity="center_horizontal"
+        android:hint="Address 2"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/AddressLine1TextBox"
+        app:layout_constraintTop_toBottomOf="@+id/lastNameTextBox" />
+
+    <EditText
+        android:id="@+id/CityTextBox"
+        android:layout_width="204dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:fontFamily="monospace"
+        android:gravity="center_horizontal"
+        android:hint="City"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/AddressLine1TextBox" />
+
+    <EditText
+        android:id="@+id/StateTextBox"
+        android:layout_width="69dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:gravity="center_horizontal"
+        android:hint="State"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toEndOf="@+id/CityTextBox"
+        app:layout_constraintTop_toBottomOf="@+id/AddressLine2TextBox" />
+
+    <EditText
+        android:id="@+id/ZipCodeTextBox"
+        android:layout_width="84dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:fontFamily="monospace"
+        android:gravity="center_horizontal"
+        android:hint="Zip"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/StateTextBox"
+        app:layout_constraintTop_toBottomOf="@+id/AddressLine2TextBox" />
+
+    <Button
+        android:id="@+id/MapAddressButton"
+        android:layout_width="163dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:onClick="launchMapAddressActivity"
+        android:text="Map Address"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/phoneNumberTextBox"
+        app:layout_constraintTop_toBottomOf="@+id/ZipCodeTextBox" />
 
 </android.support.constraint.ConstraintLayout>

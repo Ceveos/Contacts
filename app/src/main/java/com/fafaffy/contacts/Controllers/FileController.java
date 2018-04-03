@@ -46,6 +46,11 @@ public class FileController extends Activity {
             outputWriter.write(contact.getFirstName() + ",");
             outputWriter.write(contact.getMiddleInitial() + ",");
             outputWriter.write(contact.getLastName() + ",");
+//            outputWriter.write(contact.getAddressLineOne() + ",");
+//            outputWriter.write(contact.getAddressLineTwo() + ",");
+//            outputWriter.write(contact.getCity() + ",");
+//            outputWriter.write(contact.getState() + ",");
+//            outputWriter.write(contact.getZipCode() + ",");
             outputWriter.write(contact.getPhoneNumber() + ",");
             if (contact.getBirthday() == null) {
 
@@ -76,6 +81,12 @@ public class FileController extends Activity {
                 outputWriter.write(contact.getMiddleInitial() + ",");
                 outputWriter.write(contact.getLastName() + ",");
                 outputWriter.write(contact.getPhoneNumber() + ",");
+//                outputWriter.write(contact.getAddressLineOne() + ",");
+//                outputWriter.write(contact.getAddressLineTwo() + ",");
+//                outputWriter.write(contact.getCity() + ",");
+//                outputWriter.write(contact.getState() + ",");
+//                outputWriter.write(contact.getZipCode() + ",");
+//                outputWriter.write(contact.getPhoneNumber() + ",");
 
                 if (contact.getBirthday() == null) {
                     outputWriter.write(dateFormat.format("N/A") + ",");
@@ -83,7 +94,14 @@ public class FileController extends Activity {
                     outputWriter.write(dateFormat.format(contact.getBirthday()) + ",");
                 }
 
-                outputWriter.write(dateFormat.format(contact.getFirstMet()) + "\n");
+                outputWriter.write(dateFormat.format(contact.getFirstMet()) + ",");
+
+                // Phase 4 additions
+//                outputWriter.write(contact.getAddressLineOne() + ",");
+//                outputWriter.write(contact.getAddressLineTwo() + ",");
+//                outputWriter.write(contact.getCity() + ",");
+//                outputWriter.write(contact.getState() + ",");
+//                outputWriter.write(contact.getZipCode() + "\n");
             }
 
             outputWriter.close();
@@ -114,8 +132,14 @@ public class FileController extends Activity {
                             line[1].charAt(0),            // Middle initial
                             line[2],                      // Last name
                             line[3],                      // Phone number
-                            birthdate,    // Birthday
-                            dateFormat.parse(line[5])) ); // First met
+                            birthdate,                    // Birthday
+                            dateFormat.parse(line[5]),    // Date First Met
+                            line[4],                      // Address Line One
+                            line[5],                      // Address Line Two
+                            line[6],                      // City
+                            line[7],                      // State
+                            line[8])                      // Zipcode
+                    );
                 }
                 catch (ParseException e) {
                     e.printStackTrace();
