@@ -267,12 +267,6 @@ public class DetailContact extends AppCompatActivity {
         // 2 call the Google API website to get the JSON object from the contact address
         new DownloadJSONFile().execute(contactAddress);
 
-        // 3 parse JSON to get lat and longitude
-        //parseAddress(contactAddress);
-
-        // 4 Create intent and PASS LATITUDE AND LONGITUDE to map activity
-        // Moved this to the POST execute function...where it belongs
-
     }
 
     public String getAddress(){
@@ -281,8 +275,6 @@ public class DetailContact extends AppCompatActivity {
                 cityEditText.getText().toString() + ",+" +
                 stateEditText.getText().toString() + "&key=AIzaSyAaNqdT1pOfE57-E-rfvQXWsSx4QVz7stw";
     }
-
-
 
     // ASYNC TASK TO DOWNLOAD THE JSON DATA FROM GOOGLE-----------------------------------
     private class DownloadJSONFile extends AsyncTask< String, Void, JSONObject > { //3 things are: Parameter, Progress, Result
@@ -317,17 +309,16 @@ public class DetailContact extends AppCompatActivity {
             //Call parseAddress func and get those two double values, assign them into array
             latLongValues = parseAddress(fetchedDataList);
 
-
             // Now pass those two values from Double array as intents to the maps activity class
-
             Intent mapAddressIntent = new Intent(getApplicationContext(), MapsActivity.class);
-            //mapAddressIntent.putExtra(contactAddress, contactAddress)
+            mapAddressIntent.putExtra("latitude", latLongValues[0]);
+            mapAddressIntent.putExtra("longitude", latLongValues[1]);
             startActivity(mapAddressIntent);
         }
     }
 
 
-    /////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////////
     // Json Object read functions
     private static String readAll(Reader rd) throws IOException {
         StringBuilder sb = new StringBuilder();
@@ -348,7 +339,7 @@ public class DetailContact extends AppCompatActivity {
             is.close();
         }
     }
-    ///////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////
 
 
 
