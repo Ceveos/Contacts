@@ -16,10 +16,23 @@
         android:layout_alignParentTop="true" />
 
     <TextView
+        android:id="@+id/longLatLabel"
+        android:layout_width="154dp"
+        android:layout_height="31dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="monospace"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="Long/Lat:"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/distanceLabel" />
+
+    <TextView
         android:id="@+id/distanceLabel"
         android:layout_width="154dp"
         android:layout_height="31dp"
-        android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:fontFamily="monospace"
@@ -27,26 +40,40 @@
         android:text="Distance:"
         android:textColor="@color/common_google_signin_btn_text_dark_focused"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/map" />
 
     <TextView
-        android:id="@+id/distanceTextView"
+        android:id="@+id/longLatTextView"
         android:layout_width="204dp"
         android:layout_height="31dp"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:fontFamily="monospace"
         android:gravity="center_vertical|center_horizontal"
-        android:text="distanceGoesHere"
+        android:text="Lat/Long"
         android:textColor="@color/common_google_signin_btn_text_dark_focused"
         android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/distanceLabel"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/longLatLabel"
+        app:layout_constraintTop_toBottomOf="@+id/distanceTextView" />
+
+    <TextView
+        android:id="@+id/distanceTextView"
+        android:layout_width="204dp"
+        android:layout_height="31dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="monospace"
+        android:gravity="center_vertical|center_horizontal"
+        android:text="N/A"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/longLatLabel"
         app:layout_constraintTop_toBottomOf="@+id/map" />
 
 </android.support.constraint.ConstraintLayout>

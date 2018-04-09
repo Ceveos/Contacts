@@ -61,7 +61,7 @@ public class DatabaseController extends SQLiteOpenHelper{
 
     // Database Constructor only creates the Database file
     public DatabaseController(Context context) {
-        super(context, DATABASE_NAME, null, 1);
+        super(context, DATABASE_NAME, null, 2);
         //SQLiteDatabase db = this.getWritableDatabase();
         curContext = context;
     }
@@ -91,10 +91,16 @@ public class DatabaseController extends SQLiteOpenHelper{
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
         // If the table is already there, drop this new instance
-        db.execSQL("DROP TABLE IF EXISTS " + db );
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME );
         onCreate(db);
     }
 
+    // Overloaded method to INSERT data
+    public boolean insertData(String firstName, String lastName, String middleInitial,
+                              String phoneNumber, Object birthdate, Date firstContactDate) {
+
+        return insertData(firstName, lastName, middleInitial, phoneNumber, birthdate, firstContactDate, "", "", "", "", "");
+    }
 
     // Method used to INSERT Data
     public boolean insertData(String firstName, String lastName, String middleInitial,
@@ -330,7 +336,12 @@ public class DatabaseController extends SQLiteOpenHelper{
                     // If less than 6, not a valid line to parse
                     if (data.length < 6 ) continue;
                     if (data[0] == ""  || data[2] == "") continue;
-                    this.insertData(data[0], data[1], data[2],data[3],convertToDateObject(data[4]),convertToDateObject(data[5]), data[6], data[7], data[8], data[9], data[10]);
+
+                    if (data.length == 6) {
+                        this.insertData(data[0], data[1], data[2],data[3],convertToDateObject(data[4]),convertToDateObject(data[5]));
+                    } else {
+                        this.insertData(data[0], data[1], data[2],data[3],convertToDateObject(data[4]),convertToDateObject(data[5]), data[6], data[7], data[8], data[9], data[10]);
+                    }
 
                 } catch(Exception e) {
                     // Could not load this line of data
@@ -369,7 +380,7 @@ public class DatabaseController extends SQLiteOpenHelper{
 
                     writer.write("N/A \t");
                 } else {
-                    writer.write(dateFormat.format(c.getBirthday()) + "\t");
+                    writer.write(sdf.format(c.getBirthday()) + "\t");
                 }
 //                writer.write(sdf.format(c.getBirthday()) + "\t");
                 writer.write(sdf.format(c.getFirstMet()) + "\t");
